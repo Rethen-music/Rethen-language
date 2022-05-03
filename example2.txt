@@ -1,4 +1,1 @@
-c1
-
-
-clef: bass
+c-flat-minor
