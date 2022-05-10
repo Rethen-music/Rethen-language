@@ -25,6 +25,26 @@ Thanks to this, you can create very complex notes in a very simple way.
 |QUOTES  | <pre>^"$</pre>|
 |TITLE   | <pre> ^title:$</pre> |
 
+### TOKENS DESCRIPTION:
+SOUND
+Token for sound
+
+ex.1 1 Line octave
+```
+g1
+e1
+e1
+f1
+d1
+d1
+c1
+e1
+g1
+```
+ex.2 1 Line octave
+```
+
+```
 
 ## GRAMMAR:
 
