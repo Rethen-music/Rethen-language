@@ -286,145 +286,121 @@ fff
 
 
 ## ARTICULATION
-Token for sound
+In RetHen, we define the articulation of sounds.
 
-ex.1 1 Line octave
+Staccato
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
+staccato
 ```
-ex.2 1 Line octave
+Legato
 ```
-
+legato
+```
+Portato
+```
+portato
 ```
 
 ## TEMPO
-Token for sound
+In RetHen, we can define the tempo of the song, we can at the beginning and during the song:
 
-ex.1 1 Line octave
+Grave – very slow (25–45 bpm)
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
+grave
 ```
-ex.2 1 Line octave
+Largo – broadly (40–60 bpm)
 ```
-
+largo
+```
+Lento – slowly (45–60 bpm)
+```
+lento
+```
+Larghetto – rather broadly (60–66 bpm)
+```
+larghetto
+```
+Adagio – slow and stately (literally, "at ease") (66–76 bpm)
+```
+adagio
+```
+Andante – at a walking pace (76–108 bpm)
+```
+andante
+```
+Andantino – slightly faster than Andante (80–108 bpm)
+```
+andantino
+```
+Moderato – moderately (108–120 bpm)
+```
+moderato
+```
+Allegretto – moderately fast (112–120 bpm)
+```
+allegretto
+```
+Allegro – fast, quickly, and bright (120–168 bpm)
+```
+allegro
+```
+vivo-vivace – lively and fast (168–176 bpm)
+```
+vivo vivace
+```
+Presto – very, very fast (168–200 bpm)
+```
+presto
+```
+presto vivacissimo – very fast and lively (172–176 bpm)
+```
+presto vivacissimo
+```
+Prestissimo – even faster than Presto (200 bpm and over)
+```
+prestissimo
 ```
 
 ## OTHER
-Token for sound
+Description
 
-ex.1 1 Line octave
+Examples
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
-```
-ex.2 1 Line octave
+# TODO
 ```
 
-```
 
 ## STRING
-Token for sound
+Description
 
-ex.1 1 Line octave
+Examples
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
-```
-ex.2 1 Line octave
-```
-
+#TODO
 ```
 
 ## AUTHOR
-Token for sound
+Description
 
-ex.1 1 Line octave
+Examples
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
-```
-ex.2 1 Line octave
-```
-
+#TODO
 ```
 
 ## QUOTES
-Token for sound
+Description
 
-ex.1 1 Line octave
+Examples
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
-```
-ex.2 1 Line octave
-```
-
+#TODO
 ```
 
 ## TITLE
-Token for sound
+Description
 
-ex.1 1 Line octave
+Examples
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
+#TODO
 ```
-ex.2 1 Line octave
-```
-
-```
-
 
 ## GRAMMAR:
 
