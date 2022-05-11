@@ -2,7 +2,7 @@
 Rethen is a modern programming language used to describe musical notation.
 Thanks to this, you can create very complex notes in a very simple way.
 <br>
-We use FLEX and BISON to generate the Scanner and Parser.
+We use PLY to generate the Scanner and Parser.
 <br>
 
 # TOKENS DESCRIPTION:
