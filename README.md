@@ -8,14 +8,14 @@ Thanks to this, you can create very complex notes in a very simple way.
 
 |token                                           |regex                          |
 |-------------------------------                 |-----------------------------  |
-| [SOUND](#sound)                                         |<pre>^[c,C,d,D,e,E,f,F,g,G,a,A,h,H][#,b,\\\\,bb,##, \\\\\\\\]?[1-3]?$\|^p$        </pre>|
+| [SOUND](#sound)                                         |<pre>^[c,C,d,D,e,E,f,F,g,G,a,A,h,H][#,b,\\\\,bb,##,\\\\\\\\]?[1-3]?$\|^p$        </pre>|
 | [CLEF](#clef)                                           |<pre>\^clef:$</pre>                    |
-| [CLEF_VALUE](#clef_value)             | <pre>\^bass$ | \^treble$ <\pre> |
+| [CLEF_VALUE](#clef_value)                               | <pre>\^bass$\|^treble$ </pre> |
 | [KEY](#key)                                             |<pre>\^\[c,C,d,D,e,E,f,F,g,G,a,A,h,H](-sharp\|-flat)(-minor\|-major)$ </pre>  |
 | [SOUND_DURATION](#sound_duration)                              |<pre>(\^[1-9][0-9]*[:][1-9][0-9]*)\|^1$ </pre>|
 | [TIME_SIGNATURE_VALUE](#time_signature_value)                      |<pre>\^[1-9][0-9]*[//][1-9][0-9]*$    </pre>  |
 | [TIME_SIGNATURE](#time_signature)                                 |<pre> ^time signature:$               </pre>   |
-| [TAB](#tab)                                      |<pre> (^\t$) \| (^    $)</pre>         |
+| [TAB](#tab)                                      |<pre> (^\t$)\|(^    $)</pre>         |
 | [DYNAMICS](#dynamics)                                        |<pre> ^(ppp\|pp\|p\|mp\|mf\|f\|ff\|fff)$  </pre> |
 | [ARTICULATION](#articulation)                                     |<pre> ^(staccato\|legato\|portato)$    </pre> |
 | [TEMPO](#tempo)                                         |<pre>^(grave\|largo\|lento\|larghetto\|adagio\|andante\|moderato\|andantino\|allegretto\|<br>allegro\|vivo vivace\|presto\|presto vivacissimo\|prestissimo)$ </pre>    |
@@ -102,7 +102,7 @@ clef:
 
 
 ## CLEF_VALUE
-In RetHen there are different kinds of keys:
+In RetHen there are different value of clefs:
 
 Treble clef
 ```
@@ -161,164 +161,127 @@ Mezzo-soprano
 ```
 
 ## KEY
-Token for sound
+In RetHen, we can use the composition's key:
 
-ex.1 1 Line octave
+example 4 types of Keys:
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
+C-sharp-minor
+C-sharp-major
+C-flat-minor
+C-flat-major
 ```
-ex.2 1 Line octave
-```
-
-```
-
 
 ## SOUND_DURATION
-Token for sound
+In RetHen, we define the duration of the sound:
 
-ex.1 1 Line octave
+semibreve
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
+1
 ```
-ex.2 1 Line octave
+Half note
 ```
-
+1/2
+```
+Quarter note
+```
+1/4
+```
+Eighth note
+```
+1/8
+```
+Sixteenth note
+```
+1/16
+```
+Thirty-second note
+```
+1/32
+```
+```
+ZROBIĆ KROPKA PRZY NUCIE
 ```
 
 ## TIME_SIGNATURE_VALUE
-Token for sound
+In RetHen, we define value of time signature:
 
-ex.1 1 Line octave
+example of time_signature_value:
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
-```
-ex.2 1 Line octave
-```
+4/4
+1/4
+2/4
+3/4
+1/8
+3/8
+5/8
 
+etc.
 ```
 
 ## TIME_SIGNATURE
-Token for sound
+In RetHen there are a lot of keywords, one of them is:
 
-ex.1 1 Line octave
+Time Signature
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
-```
-ex.2 1 Line octave
+time_signature:
 ```
 
-```
 
 ## TAB
-Token for sound
+In RetHen we use indentation as in Python, we can write with spaces or tabs.
 
-ex.1 1 Line octave
+example 1:  one Tab and Sound
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
+    c#1
 ```
-ex.2 1 Line octave
+example 2: two Tabs and Sound
 ```
-
+        c#1
 ```
-
-## TIME_SIGNATURE
-Token for sound
-
-ex.1 1 Line octave
+example 3: 4 spaces and Sound
 ```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
+    c#1
 ```
-ex.2 1 Line octave
+example 4: 8 spaces and Sound
 ```
-
-```
-
-## TIME_SIGNATURE
-Token for sound
-
-ex.1 1 Line octave
-```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
-```
-ex.2 1 Line octave
-```
-
+        c#1
 ```
 
 ## DYNAMICS
-Token for sound
+IN RetHen, we can mark the dynamics:
 
-ex.1 1 Line octave
-```
-g1
-e1
-e1
-f1
-d1
-d1
-c1
-e1
-g1
-```
-ex.2 1 Line octave
-```
 
+Pianississimo - As softly as possible
+```
+ppp
+```
+Pianissimo - Very softly
+```
+pp
+```
+Piano - Softly
+```
+p
+```
+Mezzo – Piano Moderately softly
+```
+mp
+```
+Mezzo – Forte Moderately loudly
+```
+mf
+```
+Forte - Loudly
+```
+f
+```
+Fortissimo - Very loudly
+```
+ff
+```
+Fortississimo - As loudly as possible
+```
+fff
 ```
 
 
