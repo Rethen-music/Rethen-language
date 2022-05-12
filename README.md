@@ -11,7 +11,7 @@ We use PLY to generate the Scanner and Parser.
 |-------------------------------                 |-----------------------------  |
 | [SOUND](#sound)                                         |<pre>^[c,C,d,D,e,E,f,F,g,G,a,A,h,H][#,b,\\\\,bb,##,\\\\\\\\]?[1-3]?$\|^p$        </pre>|
 | [CLEF](#clef)                                           |<pre>\^clef:$</pre>                    |
-| [CLEF_VALUE](#clef_value)                               | <pre>\^bass$\|^treble$\|^French violin$\|^Baritone$\|^Sub-bass$\|^Alto$\|^Tenor$\|^Soprano$\|^Octave$\|^Neutral$\|^Mezzo-soprano$ </pre> |
+| [CLEF_VALUE](#clef_value)                               | <pre>\^bass$\|^treble$\|^French violin$\|^Baritone$\|^Sub-bass$\|^Alto$\|^Tenor$\|<br>^Soprano$\|^Octave$\|^Neutral$\|^Mezzo-soprano$ </pre> |
 | [KEY](#key)                                             |<pre>\^\[c,C,d,D,e,E,f,F,g,G,a,A,h,H](-sharp\|-flat)(-minor\|-major)$ </pre>  |
 | [SOUND_DURATION](#sound_duration)                              |<pre>(\^[1-9][0-9]*[:][1-9][0-9]*)\|^1$ </pre>|
 | [TIME_SIGNATURE_VALUE](#time_signature_value)                      |<pre>\^[1-9][0-9]*[//][1-9][0-9]*$    </pre>  |
@@ -20,7 +20,7 @@ We use PLY to generate the Scanner and Parser.
 | [DYNAMICS](#dynamics)                                        |<pre> ^(ppp\|pp\|p\|mp\|mf\|f\|ff\|fff\|sf\|cresc\|decresc\|dim)$  </pre> |
 | [ARTICULATION](#articulation)                                     |<pre> ^(staccato\|legato\|portato)$    </pre> |
 | [TEMPO](#tempo)                                         |<pre>^(grave\|largo\|lento\|larghetto\|adagio\|andante\|moderato\|andantino\|allegretto\|<br>allegro\|vivo vivace\|presto\|presto vivacissimo\|prestissimo)$ </pre>    |
-| [OTHER](#other) |<pre>^(ad libitum\|agitato\|alla\|appassionato\|appena\|assai\|calando\|cantabile\|con\|<br>deciso\|dolce\|dolcissimo\|energico\|eroico\|furioso\|in modo\|lacrimoso\|<br>lamentoso\|leggiero\|maestoso\|malinconico\|marcato\|marciale\|meno\|misterioso\|<br>moderato\|molto\|non molto\|non tanto\|non troppo\|patetico\|più\|quasi\|rigoroso\| <br>saltando\|scherzando\|sempre\|tranquillamente\|trionfante\|vigoroso\|zeloso\|<br>accentuato\|con forza\|con fuoco\|con tutta la forza\|mezza voce\|<br>non troppo\|simile\|sotto voce\|súbito\|tutti\|una corda <br>accelerando\|allargando\|doppio movimento\|meno mosso\|<br>poco un poco\|rallentando\|ritardando\|ritenuto\|<br>sostenuto\|pizzicato\|tremolo\|détaché\|vibrato\|sforzato\|sul tasto\|a tempo)$ </pre>|  
+| [execution-description](#execution-description) |<pre>^(ad libitum\|agitato\|alla\|appassionato\|appena\|assai\|calando\|cantabile\|con\|<br>deciso\|dolce\|dolcissimo\|energico\|eroico\|furioso\|in modo\|lacrimoso\|<br>lamentoso\|leggiero\|maestoso\|malinconico\|marcato\|marciale\|meno\|misterioso\|<br>moderato\|molto\|non molto\|non tanto\|non troppo\|patetico\|più\|quasi\|rigoroso\| <br>saltando\|scherzando\|sempre\|tranquillamente\|trionfante\|vigoroso\|zeloso\|<br>accentuato\|con forza\|con fuoco\|con tutta la forza\|mezza voce\|<br>non troppo\|simile\|sotto voce\|súbito\|tutti\|una corda <br>accelerando\|allargando\|doppio movimento\|meno mosso\|<br>poco un poco\|rallentando\|ritardando\|ritenuto\|<br>sostenuto\|pizzicato\|tremolo\|détaché\|vibrato\|sforzato\|sul tasto\|a tempo)$ </pre>|  
 | [STRING](#string) | <pre> ^[A-Za-z]?$</pre>
 | [AUTHOR](#author)   | <pre> ^author:$ </pre> |
 | [QUOTES](#quotes) | <pre>^"$</pre>|
@@ -378,7 +378,7 @@ Prestissimo – even faster than Presto (200 bpm and over)
 prestissimo
 ```
 
-## OTHER
+## EXECUTION-DESCRIPTION
 Description
 
 Examples
@@ -480,9 +480,9 @@ dynamics:
 tempo:
     | TEMPO;
 
-others:
-    | OTHER
-    | OTHER others;
+execution-descriptions:
+    | EXECUTION-DESCRIPTION
+    | EXECUTION-DESCRIPTION execution-descriptions;
 
 
 tabs: 
