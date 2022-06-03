@@ -451,80 +451,74 @@ Examples
 
 <pre>
 %%
-newline: 
-    | expression EOL;
 
-expression: tabs
-    | tabs sound
-    | tabs sound_description
-    | tabs clef
-    | tabs time_signature;
-    | tabs KEY;
+start: CREATE PIECE COLON_SIGN after_create_piece;
 
-key: KEY;
+after_create_piece:
+    | TAB AUTHOR EQUALS QUOTES STRING QUOTES after_create_piece
+    | TAB TITLE EQUALS QUOTES STRING QUOTES after_create_piece
+    | TAB KEY EQUALS KEY_VALUE after_create_piece
+    | TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_piece
+    | TAB CREATE GROUP COLON_SIGN after_create_group
+    | TAB CREATE GROUP REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET COLON_SIGN after_create_group
 
-time_signature: TIME_SIGNATURE TIME_SIGNATURE_VALUE;
+after_create_group:
+    | TAB TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_group
+    | TAB TAB KEY EQUALS KEY_VALUE after_create_group
+    | TAB TAB CLEF EQUALS CLEF_VALUE after_create_group
+    | TAB TAB CREATE LINE COLON_SIGN after_create_line
+    | TAB TAB CREATE LINE REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET COLON_SIGN after_create_line
 
+after_create_line:
+    | TAB TAB TAB CLEF EQUALS CLEF_VALUE after_create_line
+    | TAB TAB TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_line
+    | TAB TAB TAB CREATE BAR REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET COLON_SIGN after_create_bar
+    | TAB TAB TAB CREATE BAR COLON_SIGN after_create_bar
 
- clef: CLEF CLEF_VALUE;
-
-
-sound: SOUND sound_description
-    | SOUND SOUND_DURATION sound_description;
-
-sound_description:
-    | articulation dynamics tempo others
-    | dynamics articulation tempo others
-    | tempo articulation dynamics others
-    | articulation tempo dynamics others
-    | dynamics tempo articulation others
-    | tempo dynamics articulation others
-    | tempo dynamics others articulation
-    | dynamics tempo others articulation
-    | others tempo dynamics articulation
-    | tempo others dynamics articulation
-    | dynamics others tempo articulation
-    | others dynamics tempo articulation
-    | others articulation tempo dynamics
-    | articulation others tempo dynamics
-    | tempo others articulation dynamics
-    | others tempo articulation dynamics
-    | articulation tempo others dynamics
-    | tempo articulation others dynamics
-    | dynamics articulation others tempo
-    | articulation dynamics others tempo
-    | others dynamics articulation tempo
-    | dynamics others articulation tempo
-    | articulation others dynamics tempo
-    | others articulation dynamics tempo;
+after_create_bar:
+    | TAB TAB TAB TAB sounds_list
 
 
-articulation:
-    | ARTICULATION;
+sounds_list: LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET
+    | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET
+    | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET AND APPLY attributes loop
 
-dynamics:
-    | DYNAMICS;
+sounds: sound
+    | rest
+    | sound SEPARATOR sounds
+    | rest SEPARATOR sounds
 
-tempo:
-    | TEMPO;
+rest: LEFT_ROUND_BRACKET expression_for_rest RIGHT_ROUND_BRACKET
 
-execution-descriptions:
-    | EXECUTION-DESCRIPTION
-    | EXECUTION-DESCRIPTION execution-descriptions;
+sound: LEFT_ROUND_BRACKET expression_for_sound RIGHT_ROUND_BRACKET
+
+expression_for_sound: SOUND_NAME additionals_for_sound
+
+expression_for_rest: REST additionals_for_rest
+
+additionals_for_sound: 
+    | SOUND_DURATION additionals_for_sound
+    | CLEF EQUALS CLEF_VALUES additionals_for_sound
+    | ARTICULATION EQUALS ARTICULATION_VALUES additionals_for_sound
+    | DYNAMICS EQUALS DYNAMICS_VALUE additionals_for_sound
+    | LYRICS EQUALS QUOTES STRING QUOTES additionals_for_sound
+    | DESCRIPTION EQUALS QUOTES STRING QUOTES additionals_for_sound
+    | KEY EQUALS KEY_VALUE additionals_for_sound
+
+additionals_for_rest:
+    | SOUND_DURATION additionals_for_sound
+    | CLEF EQUALS CLEF_VALUES additionals_for_sound
+    | DESCRIPTION EQUALS QUOTES STRING QUOTES additionals_for_sound
+    | KEY EQUALS KEY_VALUE additionals_for_sound
 
 
-tabs: 
-    | TAB
-    | TAB tabs;
+attributes:
 
-author: AUTHOR name;
 
-name: QUOTES strings QUOTES;
 
-title: QUOTES strings QUOTES;
 
-strings: STRING
-    | STRING strings;
+loop:
+
 
 %%
 </pre>
