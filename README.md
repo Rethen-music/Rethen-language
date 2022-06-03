@@ -9,22 +9,50 @@ We use PLY to generate the Scanner and Parser.
 
 |token                                           |regex                          |
 |-------------------------------                 |-----------------------------  |
-| [SOUND](#sound)                                         |<pre>^[c,C,d,D,e,E,f,F,g,G,a,A,h,H][#,b,\\\\,bb,##,\\\\\\\\]?[1-3]?$\|^p$        </pre>|
-| [CLEF](#clef)                                           |<pre>\^clef:$</pre>                    |
-| [CLEF_VALUE](#clef_value)                               | <pre>\^bass$\|^treble$\|^French violin$\|^Baritone$\|^Sub-bass$\|^Alto$\|^Tenor$\|<br>^Soprano$\|^Octave$\|^Neutral$\|^Mezzo-soprano$ </pre> |
-| [KEY](#key)                                             |<pre>\^\[c,C,d,D,e,E,f,F,g,G,a,A,h,H](-sharp\|-flat)(-minor\|-major)$ </pre>  |
-| [SOUND_DURATION](#sound_duration)                              |<pre>(\^[1-9][0-9]*[:][1-9][0-9]*)\|^1$ </pre>|
-| [TIME_SIGNATURE_VALUE](#time_signature_value)                      |<pre>\^[1-9][0-9]*[//][1-9][0-9]*$    </pre>  |
-| [TIME_SIGNATURE](#time_signature)                                 |<pre> ^time signature:$               </pre>   |
-| [TAB](#tab)                                      |<pre> (^\t$)\|(^    $)</pre>         |
-| [DYNAMICS](#dynamics)                                        |<pre> ^(ppp\|pp\|p\|mp\|mf\|f\|ff\|fff\|sf\|cresc\|decresc\|dim)$  </pre> |
-| [ARTICULATION](#articulation)                                     |<pre> ^(staccato\|legato\|portato)$    </pre> |
-| [TEMPO](#tempo)                                         |<pre>^(grave\|largo\|lento\|larghetto\|adagio\|andante\|moderato\|andantino\|allegretto\|<br>allegro\|vivo vivace\|presto\|presto vivacissimo\|prestissimo)$ </pre>    |
-| [execution-description](#execution-description) |<pre>^(ad libitum\|agitato\|alla\|appassionato\|appena\|assai\|calando\|cantabile\|con\|<br>deciso\|dolce\|dolcissimo\|energico\|eroico\|furioso\|in modo\|lacrimoso\|<br>lamentoso\|leggiero\|maestoso\|malinconico\|marcato\|marciale\|meno\|misterioso\|<br>moderato\|molto\|non molto\|non tanto\|non troppo\|patetico\|più\|quasi\|rigoroso\| <br>saltando\|scherzando\|sempre\|tranquillamente\|trionfante\|vigoroso\|zeloso\|<br>accentuato\|con forza\|con fuoco\|con tutta la forza\|mezza voce\|<br>non troppo\|simile\|sotto voce\|súbito\|tutti\|una corda <br>accelerando\|allargando\|doppio movimento\|meno mosso\|<br>poco un poco\|rallentando\|ritardando\|ritenuto\|<br>sostenuto\|pizzicato\|tremolo\|détaché\|vibrato\|sforzato\|sul tasto\|a tempo)$ </pre>|  
-| [STRING](#string) | <pre> ^[A-Za-z]?$</pre>
-| [AUTHOR](#author)   | <pre> ^author:$ </pre> |
+| [SOUND_NAME](#sound)|<pre>^[C,D,E,F,G,A,B][#,b,bb,##]?[1-8]?$</pre>|
+| [REST](#rest)| <pre>^R$</pre> |
+| [SEPARATOR](#separator)|<pre>^,$</pre>|
+| [SOUND_DURATION](#sound_duration)|<pre>^([1-9][0-9]?[\\/][1-9][0-9]?\|^1)$</pre>|                                        
+| [CLEF](#clef) |<pre>^clef$</pre>|
+| [CLEF_VALUE](#clef_value)|<pre>^(treble\|bass\|alto)$ </pre> |
+| [KEY](#key) |<pre>^key$</pre>|
+| [KEY_VALUE](#key_value)|<pre>\^\[c,C,d,D,e,E,f,F,g,G,a,A,b,B](-sharp\|-flat)?$</pre>|
+| [DYMANICS](#dynamics) |<pre>^dynamics$</pre>|
+| [DYNAMICS_VALUE](#dynamics_value)|<pre> ^(ppp\|pp\|p\|mp\|mf\|f\|ff\|fff\|sf\|cresc\|decresc\|dim)$</pre>|
+| [DESCRIPTION](#description) |<pre>^description$</pre>|
 | [QUOTES](#quotes) | <pre>^"$</pre>|
-| [TITLE](#title)  | <pre> ^title:$</pre> |
+| [STRING](#string) | <pre> ^[A-Za-z][A-Z a-z]*$ </pre> |
+| [LYRICS](#lyrics) | <pre> ^lyrics$</pre> |
+| [ARTICULATION](#articulation) | <pre> ^articulation$</pre> |
+| [ARTICULATION_VALUE](#articulation_value)|<pre> ^(staccato\|legato\|portato\|accent)$</pre> |
+| [AUTHOR](#author) | <pre> ^author$ </pre> |
+| [TITLE](#title) | <pre>^title$</pre> |
+| [TIME_SIGNATURE](#time_signature)|<pre>^time signature:$</pre>|
+| [TIME_SIGNATURE_VALUE](#time_signature_value)|<pre>^[1-9][0-9]?[\\/][1-9][0-9]?$</pre>|
+| [TAB](#tab)|<pre> (^\t$)\|(^    $)</pre>         |
+| [TEMPO](#tempo)| <pre>^tempo$</pre> |
+| [CREATE](#create)| <pre>^create$</pre> |
+| [PIECE](#piece) |<pre>^piece$</pre> |
+| [GROUP](#group) |<pre>^group$</pre> |
+| [LINE](#line)| <pre>^line$</pre> |
+| [BAR](#bar) |<pre>^bar$</pre> |
+| [COLON_SIGN](#colon_sign)|<pre>^:$</pre>|
+| [LEFT_SQUARE_BRACKET](#left_square_bracket) |<pre>^[$</pre> |
+| [RIGHT_SQUARE_BRACKET](#right_square_bracket)| <pre>^]$</pre> |
+| [LEFT_ROUND_BRACKET](#left_square_bracket)| <pre>^($</pre> |
+| [RIGHT_ROUND_BRACKET](#right_square_bracket)| <pre>^)$</pre> |
+| [REPEAT](#repeat)| <pre>^repeat$</pre> |
+| [APPLY](#apply) |<pre>^apply$</pre> |
+| [FOR](#for)| <pre>^for$</pre> |
+| [AND](#and)| <pre>^&$</pre> |
+| [INDEX](#index) |<pre>^i$</pre> |
+| [GREATER](#for) |<pre>^>$</pre> |
+| [GREATER_EQUALS](#for) |<pre>^>=$</pre> |
+| [LOWER](#for)| <pre>^<$</pre> |
+| [LOWER_EQUALS](#for)| <pre>^<=$</pre> |
+| [EQUALS](#equals_sign) |<pre>^=$</pre>|
+| [NUMBER](#number) |<pre>^[0-9][0-9]*$</pre>|
+
 
 
 ## SOUND
