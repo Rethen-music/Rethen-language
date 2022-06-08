@@ -27,7 +27,7 @@ tokens = (
     'CREATE',
     'PIECE',
     'GROUP',
-    'LINE',
+    'STAFF',
     'BAR',
     'COLON_SIGN',
     'LEFT_SQUARE_BRACKET',
@@ -74,7 +74,7 @@ t_TEMPO = r'tempo'
 t_CREATE = r'create'
 t_PIECE = r'piece'
 t_GROUP = r'group'
-t_LINE = r'line'
+t_STAFF = r'staff'
 t_BAR = r'bar'
 t_COLON_SIGN = r':'
 t_LEFT_SQUARE_BRACKET = r'\['
@@ -97,8 +97,6 @@ t_STRING = r'"[A-Za-z][A-Z a-z]*"'
 
 
 
-
- 
 # A regular expression rule with some action code
 
 
@@ -121,11 +119,20 @@ lexer = lex.lex()
 
 # 
 # [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]
-data = '''
+data7 = '''
 create bar:
+    time_signature(1/4)
     [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]
     [{E4,'1/2'},{F4,'1/2'}]
     [{G4,'1/2'},{B4,'1/2'}]
+'''
+
+data = '''
+create piece:
+    author = "Marcin Retajczyk"
+    title = "Danielo Henelllo"
+    create group repeat(5):
+        create staff:
 '''
 
 data2 = '''lyrics="sss"'''

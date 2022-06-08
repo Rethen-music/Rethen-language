@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="08d524c1-e77b-4922-b8d9-1cd3a8c2c507" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/compiler/build.py" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/build.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compiler/parser.out" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/parser.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compiler/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compiler/parsetab.py" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/parsetab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compiler/scanner.py" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/scanner.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/structures/sound.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2AIRqWHhyIvo24IQc7E7tdgFzzw" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="08d524c1-e77b-4922-b8d9-1cd3a8c2c507" name="Changes" comment="" />
+      <created>1654695314413</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1654695314413</updated>
+      <workItem from="1654695319088" duration="6000" />
+    </task>
+    <servers />
+  </component>
+</project>
