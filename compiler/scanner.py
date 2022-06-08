@@ -11,7 +11,7 @@ tokens = (
     'CLEF_VALUE',
     'KEY',
     'KEY_VALUE',
-    'DYMANICS',
+    'DYNAMICS',
     'DYNAMICS_VALUE',
     'DESCRIPTION',
     'QUOTES',
@@ -59,12 +59,12 @@ t_CLEF = r'clef'
 t_CLEF_VALUE = r'\((treble|bass|alto)\)'
 t_KEY = r'key'
 t_KEY_VALUE = r'\((c|C|d|D|e|E|f|F|g|G|a|A|b|B)(-sharp|-flat)?\)'
-t_DYMANICS = r'dynamics'
+t_DYNAMICS = r'dynamics'
 t_DYNAMICS_VALUE = r'\((ppp|pp|p|mp|mf|f|ff|fff|sf|cresc|decresc|dim)\)'
 t_DESCRIPTION = r'description'
 t_LYRICS = r'lyrics'
 t_ARTICULATION = r'articulation'
-t_ARTICULATION_VALUE = r'\((staccato|legato|portato|accent)\)'
+t_ARTICULATION_VALUE = r'\((staccato|legato|pizzicato|accent)\)'
 t_AUTHOR = r'author'
 t_TITLE = r'title'
 t_TIME_SIGNATURE = r'time_signature'
@@ -119,8 +119,12 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
-
 data = '''
+[{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="dupa"}]
+[{A4,'1'}]
+'''
+
+data1 = '''
 create piece:
     author = "Frideric Chopin"
     title = "Polonaise"
@@ -146,9 +150,11 @@ create piece:
  # Give the lexer some input
 lexer.input(data)
  
+tokensList = []
  # Tokenize
 while True:
     tok = lexer.token()
     if not tok: 
         break      # No more input
-    print(tok)
+    tokensList.append(tok)
+
