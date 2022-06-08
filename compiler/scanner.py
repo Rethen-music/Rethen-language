@@ -119,11 +119,18 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
+# 
+# [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]
 data = '''
-[{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="dupa"}]
-[{A4,'1'}]
+create bar:
+    [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]
+    [{E4,'1/2'},{F4,'1/2'}]
+    [{G4,'1/2'},{B4,'1/2'}]
 '''
 
+data2 = '''lyrics="sss"'''
+
+data3 = '''     [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]'''
 data1 = '''
 create piece:
     author = "Frideric Chopin"

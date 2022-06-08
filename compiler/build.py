@@ -1,10 +1,12 @@
 from scanner import *
 from parser import * 
 
-parser = yacc.yacc()
+parser = yacc.yacc(start='create_bar')
 text = data #file.read()
 parser.parse(text, lexer=lexer)
 
 #print(tokensList)
 
-currentMeasure.show()
+showNotes()
+#currentMeasure.show()
+#print(voice_list)

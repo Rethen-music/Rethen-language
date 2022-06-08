@@ -472,8 +472,8 @@ after_create_line:
     | TAB TAB TAB CREATE BAR REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET COLON_SIGN after_create_bar
     | TAB TAB TAB CREATE BAR COLON_SIGN after_create_bar
 
-after_create_bar:
-    | TAB TAB TAB TAB sounds_list
+after_create_bar: sounds_list
+    | TAB TAB TAB TAB sounds_list after_create_bar
 
 
 sounds_list: LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET
