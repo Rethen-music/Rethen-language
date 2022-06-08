@@ -14,14 +14,13 @@ We use PLY to generate the Scanner and Parser.
 | [SEPARATOR](#separator)|<pre>^,$</pre>|
 | [SOUND_DURATION](#sound_duration)|<pre>^([1-9][0-9]?[\\/][1-9][0-9]?\|^1)$</pre>|                                        
 | [CLEF](#clef) |<pre>^clef$</pre>|
-| [CLEF_VALUE](#clef_value)|<pre>^(treble\|bass\|alto)$ </pre> |
+| [CLEF_VALUE](#clef_value)|<pre>^\((treble\|bass\|alto)\)$ </pre> |
 | [KEY](#key) |<pre>^key$</pre>|
-| [KEY_VALUE](#key_value)|<pre>\^\[c,C,d,D,e,E,f,F,g,G,a,A,b,B](-sharp\|-flat)?$</pre>|
+| [KEY_VALUE](#key_value)|<pre>\^(\[c,C,d,D,e,E,f,F,g,G,a,A,b,B](-sharp\|-flat)?)$</pre>|
 | [DYMANICS](#dynamics) |<pre>^dynamics$</pre>|
 | [DYNAMICS_VALUE](#dynamics_value)|<pre> ^(ppp\|pp\|p\|mp\|mf\|f\|ff\|fff\|sf\|cresc\|decresc\|dim)$</pre>|
 | [DESCRIPTION](#description) |<pre>^description$</pre>|
-| [QUOTES](#quotes) | <pre>^"$</pre>|
-| [STRING](#string) | <pre> ^[A-Za-z][A-Z a-z]*$ </pre> |
+| [STRING](#string) | <pre> ^"[A-Za-z][A-Z a-z]*"$ </pre> |
 | [LYRICS](#lyrics) | <pre> ^lyrics$</pre> |
 | [ARTICULATION](#articulation) | <pre> ^articulation$</pre> |
 | [ARTICULATION_VALUE](#articulation_value)|<pre> ^(staccato\|legato\|portato\|accent)$</pre> |
@@ -39,8 +38,6 @@ We use PLY to generate the Scanner and Parser.
 | [COLON_SIGN](#colon_sign)|<pre>^:$</pre>|
 | [LEFT_SQUARE_BRACKET](#left_square_bracket) |<pre>^[$</pre> |
 | [RIGHT_SQUARE_BRACKET](#right_square_bracket)| <pre>^]$</pre> |
-| [LEFT_ROUND_BRACKET](#left_square_bracket)| <pre>^($</pre> |
-| [RIGHT_ROUND_BRACKET](#right_square_bracket)| <pre>^)$</pre> |
 | [REPEAT](#repeat)| <pre>^repeat$</pre> |
 | [APPLY](#apply) |<pre>^apply$</pre> |
 | [FOR](#for)| <pre>^for$</pre> |
@@ -455,9 +452,9 @@ Examples
 start: CREATE PIECE COLON_SIGN after_create_piece;
 
 after_create_piece:
-    | TAB AUTHOR EQUALS QUOTES STRING QUOTES after_create_piece
-    | TAB TITLE EQUALS QUOTES STRING QUOTES after_create_piece
-    | TAB KEY EQUALS KEY_VALUE after_create_piece
+    | TAB AUTHOR EQUALS STRING after_create_piece
+    | TAB TITLE EQUALS STRING after_create_piece
+    | TAB KEY KEY_VALUE after_create_piece
     | TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_piece
     | TAB CREATE GROUP COLON_SIGN after_create_group
     | TAB CREATE GROUP REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET COLON_SIGN after_create_group
