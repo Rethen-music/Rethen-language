@@ -7,6 +7,7 @@ tokens = (
     'REST',
     'SEPARATOR',
     'SOUND_DURATION',
+    'SOUND_DURATION_VALUE',
     'CLEF',
     'CLEF_VALUE',
     'KEY',
@@ -14,7 +15,6 @@ tokens = (
     'DYNAMICS',
     'DYNAMICS_VALUE',
     'DESCRIPTION',
-    'QUOTES',
     'LYRICS',
     'ARTICULATION',
     'ARTICULATION_VALUE',
@@ -54,7 +54,8 @@ tokens = (
 t_SOUND_NAME = r'[CDEFGAB](\#|b|bb|\#\#)?[1-8]?'
 t_REST = r'R'
 t_SEPARATOR = r','
-t_SOUND_DURATION = r'\'([1-9][0-9]?[\/][1-9][0-9]?|1)\''
+t_SOUND_DURATION= r'sound_duration'
+t_SOUND_DURATION_VALUE = r'\'([1-9][0-9]?[\/][1-9][0-9]?|1)\''
 t_CLEF = r'clef'
 t_CLEF_VALUE = r'\((treble|bass|alto)\)'
 t_KEY = r'key'
@@ -91,7 +92,7 @@ t_GREATER_EQUALS = r'>='
 t_LOWER = r'<'
 t_LOWER_EQUALS = r'<='
 t_EQUALS = r'='
-t_NUMBER = r'[0-9][0-9]*'
+t_NUMBER = r'[1-9][0-9]*'
 t_ITERATION_NUMBER = r'\([1-9][0-9]*\)'
 t_STRING = r'"[A-Za-z][A-Z a-z]*"'
 
@@ -107,7 +108,7 @@ def t_newline(t):
  
  # A string containing ignored characters (spaces and tabs)
 #t_ignore  = r'[ ]{1}'
- 
+
  # Error handling rule
 def t_error(t):
     #print("Illegal character '%s'" % t.value[0])
@@ -127,25 +128,28 @@ create bar:
     [{G4,'1/2'},{B4,'1/2'}]
 '''
 
-data = '''
+data99 = '''
 create piece:
     author = "Marcin Retajczyk"
     title = "Danielo Henelllo"
     create group repeat(5):
         create staff:
 '''
-
+data0 = """
+create piece:
+create piece:
+"""
 data2 = '''lyrics="sss"'''
-
+datap = ""
 data3 = '''     [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]'''
-data1 = '''
+data = '''
 create piece:
     author = "Frideric Chopin"
     title = "Polonaise"
     time_signature(1/4)
     key(c-flat)
     create group:
-        create line:
+        create staff:
             clef(alto)
             time_signature(1/2)
             create bar:
@@ -155,10 +159,11 @@ create piece:
             create bar:
                 [{D,'1'}]
                 [{E,'1'}]
-        create line:
+        create staff:
             clef(bass)
             create bar:
-                    [{C,'1/16'},{A,'1/16',tempo="adagio"},{R,'1/6'}] repeat(8) & apply [articulation(staccato),description="vibrato",lyrics="aua"] for [i>5,i<2,3]
+                [{C,'1/16'},{A,'1/16',tempo="adagio"},{R,'1/6'}] repeat(8) & apply [,articulation(staccato),description="vibrato",lyrics="aua"] for [1,i>5,i<2,3]
+ create piece:
  '''
  
  # Give the lexer some input
