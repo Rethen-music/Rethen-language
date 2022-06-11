@@ -1,8 +1,3 @@
-from re import S
-import re
-from telnetlib import XDISPLOC
-from tokenize import group
-
 from structures.sound import Sound
 from structures.staff import Staff
 from structures.piece import Piece
@@ -10,7 +5,6 @@ from structures.group import Group
 from structures.voice import Voice
 from structures.bar import Bar
 from structures.expression import Expression
-
 
 from matplotlib.colors import NoNorm
 import ply.yacc as yacc
@@ -46,17 +40,14 @@ def p_after_create_piece(p):
     | TAB TITLE EQUALS STRING after_create_piece
     | TAB CLEF CLEF_VALUE after_create_piece
     | TAB TEMPO EQUALS STRING after_create_piece
-    | TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_piece
+    | TAB TIME_SIGNATURE TIME_SIGNATURE_VALUE after_create_piece
     | TAB KEY KEY_VALUE after_create_piece
     | TAB SOUND_DURATION EQUALS SOUND_DURATION_VALUE after_create_piece
     | TAB ARTICULATION ARTICULATION_VALUE after_create_piece
     | TAB DYNAMICS DYNAMICS_VALUE after_create_piece
     | TAB LYRICS EQUALS STRING after_create_piece
     | TAB DESCRIPTION EQUALS STRING after_create_piece
-    | create_bar after_create_bar
-    | create_staff after_create_staff
-    | create_group after_create_group
-    | create_piece after_create_piece
+    | create
     """
     print("after_create_piece")
     global currentPiece
@@ -73,9 +64,9 @@ def p_after_create_piece(p):
         elif(p[2]=='tempo'):
             currentPiece.tempo = tempo.MetronomeMark(p[4][1:-1])
         elif(p[2]=='time_signature'):
-            currentPiece.time_signature = meter.TimeSignature(p[4][1:-1])
+            currentPiece.time_signature = meter.TimeSignature(p[3][1:-1])
         elif(p[2]=='clef'):
-            currentPiece.clef = clef.Clef(p[4][1:-1])
+            currentPiece.clef = clef.clefFromString(p[4][1:-1])
         elif p[2] == "dynamics":
             currentPiece.dynamics = dynamics.Dynamic(p[3][1:-1])
         elif p[2] == "articulation":
@@ -100,17 +91,14 @@ def p_after_create_group(p):
     after_create_group : empty
         | TAB TAB CLEF CLEF_VALUE after_create_group
         | TAB TAB TEMPO EQUALS STRING after_create_group
-        | TAB TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_group
+        | TAB TAB TIME_SIGNATURE TIME_SIGNATURE_VALUE after_create_group
         | TAB TAB KEY KEY_VALUE after_create_group
         | TAB TAB SOUND_DURATION EQUALS SOUND_DURATION_VALUE after_create_group
         | TAB TAB ARTICULATION ARTICULATION_VALUE after_create_group
         | TAB TAB DYNAMICS DYNAMICS_VALUE after_create_group
         | TAB TAB LYRICS EQUALS STRING after_create_group
         | TAB TAB DESCRIPTION EQUALS STRING after_create_group
-        | create_bar after_create_bar
-        | create_staff after_create_staff
-        | create_group after_create_group
-        | create_piece after_create_piece
+        | create
     """
     print("after_create_group")
     global currentGroup
@@ -119,7 +107,7 @@ def p_after_create_group(p):
 
     if len(p) == 6:
         if p[3] == "clef":
-            currentGroup.clef = clef.Clef(p[4][1:-1])
+            currentGroup.clef = clef.clefFromString(p[4][1:-1])
         elif p[3] == "dynamics":
             currentGroup.dynamics = dynamics.Dynamic(p[4][1:-1])
         elif p[3] == "articulation":
@@ -143,7 +131,7 @@ def p_after_create_group(p):
         elif p[3] == "sound_duration":
             currentGroup.sound_duration = p[5][1:-1]
         else:
-            currentGroup.times_signature =  meter.TimeSignature(p[5][1:-1])
+            currentGroup.times_signature =  meter.TimeSignature(p[4][1:-1])
     pass
 
 def p_after_create_staff(p):
@@ -151,17 +139,14 @@ def p_after_create_staff(p):
     after_create_staff : empty
         | TAB TAB TAB CLEF CLEF_VALUE after_create_staff
         | TAB TAB TAB TEMPO EQUALS STRING after_create_staff
-        | TAB TAB TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_staff
+        | TAB TAB TAB TIME_SIGNATURE TIME_SIGNATURE_VALUE after_create_staff
         | TAB TAB TAB KEY KEY_VALUE after_create_staff
         | TAB TAB TAB SOUND_DURATION EQUALS SOUND_DURATION_VALUE after_create_staff
         | TAB TAB TAB ARTICULATION ARTICULATION_VALUE after_create_staff
         | TAB TAB TAB DYNAMICS DYNAMICS_VALUE after_create_staff
         | TAB TAB TAB LYRICS EQUALS STRING after_create_staff
         | TAB TAB TAB DESCRIPTION EQUALS STRING after_create_staff
-        | create_bar after_create_bar
-        | create_staff after_create_staff
-        | create_group after_create_group
-        | create_piece after_create_piece
+        | create
     """
     print("after_create_staff")
     global currentStaff 
@@ -171,7 +156,7 @@ def p_after_create_staff(p):
 
     if len(p) == 7:
         if p[4] == "clef":
-            currentStaff.clef = clef.Clef(p[5][1:-1])
+            currentStaff.clef = clef.clefFromString(p[5][1:-1])
         elif p[4] == "dynamics":
             currentStaff.dynamics = dynamics.Dynamic(p[5][1:-1])
         elif p[4] == "articulation":
@@ -195,7 +180,7 @@ def p_after_create_staff(p):
         elif p[5] == "sound_duration":
             currentStaff.sound_duration = p[6][1:-1]
         else:
-            currentStaff.times_signature =  meter.TimeSignature(p[6][1:-1])
+            currentStaff.times_signature =  meter.TimeSignature(p[5][1:-1])
     pass                
 
 def p_create_bar(p):
@@ -203,6 +188,7 @@ def p_create_bar(p):
     create_bar : TAB TAB TAB CREATE BAR COLON_SIGN
     | TAB TAB TAB CREATE BAR REPEAT ITERATION_NUMBER COLON_SIGN
     """
+    print("create_bar")
     global measure_list
     global currentMeasure
     global voice_list
@@ -218,6 +204,7 @@ def p_create_staff(p):
     create_staff : TAB TAB CREATE STAFF COLON_SIGN
     | TAB TAB CREATE STAFF REPEAT ITERATION_NUMBER COLON_SIGN
     """
+    print("create_staff")
     global voice_list
     global measure_list
     global staff_list
@@ -240,6 +227,7 @@ def p_create_group(p):
     create_group : TAB CREATE GROUP COLON_SIGN
     | TAB CREATE GROUP REPEAT ITERATION_NUMBER COLON_SIGN
     """
+    print("create_group")
     global voice_list
     global measure_list
     global staff_list
@@ -264,11 +252,20 @@ def p_create_group(p):
         currentGroup = None
     pass
 
+def p_start(p):
+    """
+    start : create_piece after_create_piece
+    """
+    print("start")
+    pass
+
 def p_create_piece(p):
     """
     create_piece : CREATE PIECE COLON_SIGN
     | CREATE PIECE REPEAT ITERATION_NUMBER COLON_SIGN
     """
+    print("create_piece")
+
     global voice_list
     global measure_list
     global staff_list
@@ -278,6 +275,12 @@ def p_create_piece(p):
     global currentStaff
     global currentPiece
     global currentGroup
+
+    print(voice_list)
+    print(staff_list)
+    print(measure_list)
+    print(group_list)
+    print(piece_list)
 
     if currentMeasure is not None:
         measure_list.append(currentMeasure)
@@ -300,6 +303,26 @@ def p_create_piece(p):
         currentPiece = None
     pass
 
+def p_create(p):
+    """
+    create : after_create_bar create_bar after_create_bar
+        | after_create_bar create_staff after_create_staff
+        | after_create_bar create_group after_create_group
+        | after_create_bar create_piece after_create_piece
+        | after_create_staff create_bar after_create_bar
+        | after_create_staff create_staff after_create_staff
+        | after_create_staff create_group after_create_group
+        | after_create_staff create_piece after_create_piece
+        | after_create_group create_bar after_create_bar
+        | after_create_group create_staff after_create_staff
+        | after_create_group create_group after_create_group
+        | after_create_group create_piece after_create_piece
+        | after_create_piece create_bar after_create_bar
+        | after_create_piece create_staff after_create_staff
+        | after_create_piece create_group after_create_group
+        | after_create_piece create_piece after_create_piece
+    """
+    pass
 
 def p_after_create_bar(p):
     """
@@ -307,17 +330,14 @@ def p_after_create_bar(p):
         | TAB TAB TAB TAB sounds_list after_create_bar
         | TAB TAB TAB TAB CLEF CLEF_VALUE after_create_bar
         | TAB TAB TAB TAB TEMPO EQUALS STRING after_create_bar
-        | TAB TAB TAB TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_bar
+        | TAB TAB TAB TAB TIME_SIGNATURE TIME_SIGNATURE_VALUE after_create_bar
         | TAB TAB TAB TAB KEY KEY_VALUE after_create_bar
         | TAB TAB TAB TAB SOUND_DURATION EQUALS SOUND_DURATION_VALUE after_create_bar
         | TAB TAB TAB TAB ARTICULATION ARTICULATION_VALUE after_create_bar
         | TAB TAB TAB TAB DYNAMICS DYNAMICS_VALUE after_create_bar
         | TAB TAB TAB TAB LYRICS EQUALS STRING after_create_bar
         | TAB TAB TAB TAB DESCRIPTION EQUALS STRING after_create_bar
-        | create_bar after_create_bar
-        | create_staff after_create_staff
-        | create_group after_create_group
-        | create_piece after_create_piece
+        | create
     """
     print("after_create_bar")
     global voice_list
@@ -329,7 +349,7 @@ def p_after_create_bar(p):
             currentMeasure.voices = voice_list
     elif len(p) == 8:
         if p[5] == "clef":
-            currentMeasure.clef = clef.Clef(p[6][1:-1])
+            currentMeasure.clef = clef.clefFromString(p[6][1:-1])
         elif p[5] == "dynamics":
             currentMeasure.dynamics = dynamics.Dynamic(p[6][1:-1])
         elif p[5] == "articulation":
@@ -353,15 +373,15 @@ def p_after_create_bar(p):
         elif p[5] == "sound_duration":
             currentMeasure.sound_duration = p[7][1:-1]
         else:
-            currentMeasure.times_signature =  meter.TimeSignature(p[7][1:-1])
+            currentMeasure.times_signature =  meter.TimeSignature(p[6][1:-1])
     pass
 
 def p_expression_list(p):
-    print("expression_list")
     """
     expression_list : expression
         | expression SEPARATOR expression_list
     """
+    print("expression_list")
 
 def p_expression(p):
     """
@@ -383,14 +403,14 @@ def p_expression(p):
     print("expression")
     global indices
     if len(p) == 2: #number
-        number = p[1] - 1
+        number = int(p[1]) - 1
         if number < len(sounds_list):
             indices.add(number)
         else:
             raise Exception("Index out of range")
 
     elif len(p) == 4: #index sign number
-        number = p[3] - 1
+        number = int(p[3]) - 1
 
         if p[2] == "=":
             if number < len(sounds_list):
@@ -400,35 +420,39 @@ def p_expression(p):
         elif p[2] == ">=":
             numbers = set(range(len(sounds_list))).intersection(set(range(number,len(sounds_list))))
             if len(numbers) == 0:
-                raise Exception("Wrong expression: i>={}".format(number))
+                msg = "Wrong expression: i>={}".format(number+1)
+                raise Exception(msg)
             else:
-                indices.add(numbers)
+                indices.union(numbers)
 
         elif p[2] == "<=":
-            numbers = set(range(len(sounds_list))).intersection(set(range(0,number)))
+            numbers = set(range(len(sounds_list))).intersection(set(range(0,number+1)))
             if len(numbers) == 0:
-                raise Exception("Wrong expression: i<={}".format(number))
+                msg = "Wrong expression: i<={}".format(number+1)
+                raise Exception(msg)
             else:
-                indices.add(numbers)
+                indices.union(numbers)
 
         elif p[2] == ">":
             numbers = set(range(len(sounds_list))).intersection(set(range(number+1,len(sounds_list))))
             if len(numbers) == 0:
-                raise Exception("Wrong expression: i>{}".format(number))
+                msg = "Wrong expression: i>{}".format(number+1)
+                raise Exception(msg)
             else:
-                indices.add(numbers)
+                indices.union(numbers)
         elif p[2] == "<":
-            numbers = set(range(len(sounds_list))).intersection(set(range(0,number-1)))
+            numbers = set(range(len(sounds_list))).intersection(set(range(0,number)))
             if len(numbers) == 0:
-                raise Exception("Wrong expression: i<{}".format(number))
+                msg = "Wrong expression: i<{}".format(number+1)
+                raise Exception(msg)
             else:
-                indices.add(numbers)
+                indices.union(numbers)
 
 def repeat_sounds(x):
     print("repeat_sounds")
     global sounds_list
     result = []
-    for i in range(0,x):
+    for i in range(0,int(x)):
         result += sounds_list
     sounds_list = result
 
@@ -441,6 +465,7 @@ def apply_attributes():
     global sound_dynamics
     global sound_duration
     global sound_key
+    global sound_tempo
     global sound_description
     global indices
     
@@ -453,6 +478,8 @@ def apply_attributes():
             sounds_list[i].dynamics = sound_dynamics
         if sound_articulation != None: sounds_list[i].note.articulations.append(sound_articulation)            
         if sound_lyrics != None: sounds_list[i].note.addLyric(sound_lyrics)
+        if sound_description != None: sounds_list[i].note.addLyric(sound_description)
+        if sound_tempo != None: sounds_list[i].tempo(sound_tempo)
         if sound_duration != None: sounds_list[i].note.duration = sound_duration 
 
     sound_clef = None
@@ -462,6 +489,7 @@ def apply_attributes():
     sound_duration = None
     sound_key = None
     sound_description = None
+    sound_tempo = None
 
 def p_repeat(p):
     """
@@ -469,7 +497,7 @@ def p_repeat(p):
     """
     print("repeat")
     global sounds_list
-    repeat_sounds(p[5][1:-1])
+    repeat_sounds(p[2][1:-1])
     pass
 
 
@@ -487,7 +515,7 @@ def p_apply(p):
 def p_sounds_list(p):
     """
     sounds_list : LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET
-        | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET 
+        | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET repeat
         | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET apply
         | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET repeat AND apply
         | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET apply AND repeat
@@ -560,6 +588,7 @@ def p_expression_for_sound(p):
     
     
     currentSound = Sound()
+    currentSound.note = note.Note(p[1])
     if sound_lyrics != None: currentSound.lyrics = sound_lyrics
         #currentSound.note.addLyric(sound_lyrics)
     if sound_articulation != None: currentSound.articulation = sound_articulation
@@ -609,8 +638,6 @@ def p_expression_for_rest(p):
     currentSound = note.Rest()
     pass
 
-
-
 def parseKey(str):
     print("parseKey")
     str = str[1:-1]
@@ -623,8 +650,6 @@ def parseKey(str):
             sign = '#'
         return letter + sign
     return letter
-
-
 
 def p_additionals_for_sound(p):
     """
@@ -654,23 +679,23 @@ def p_additionals_for_sound(p):
         if(p[2] == "key"): 
             sound_key = key.Key(parseKey(p[3]))
         elif(p[2] =="description"):
-            if sound_duration is None:
-                sound_duration = p[4][1:-1]
+            if sound_description is None:
+                sound_description = p[4][1:-1]
         elif(p[2] =="lyrics"):  
             if sound_lyrics is None:
                 sound_lyrics = p[4][1:-1]
         elif(p[2] =="dynamics"):  
             if sound_dynamics is None:
-                sound_dynamics = dynamics.Dynamic(p[4][1:-1])
+                sound_dynamics = dynamics.Dynamic(p[3][1:-1])
         elif(p[2] =="articulation"):
             if sound_articulation is None:
-                if(p[4][1:-1] == "staccato"):
+                if(p[3][1:-1] == "staccato"):
                     sound_articulation = articulations.Staccato()
-                elif(p[4][1:-1] == "pizzicato"):
+                elif(p[3][1:-1] == "pizzicato"):
                     sound_articulation = articulations.Pizzicato()
-                elif(p[4][1:-1] == "legato"):
+                elif(p[3][1:-1] == "legato"):
                     sound_articulation = articulations.DetachedLegato()
-                elif(p[4][1:-1] == "accent"):
+                elif(p[3][1:-1] == "accent"):
                     sound_articulation = articulations.Accent()
         elif(p[2] =="clef"):
             if sound_clef is None:
@@ -757,8 +782,8 @@ def inherit_attributes():
                             if sound.time_signature is None: sound.time_signature = piece.time_signature
     pass
 
-
-
 def showNotes():
     print("showNotes")
-    piece_list[0].score.show()
+    print(piece_list)
+    print(piece_list[0].groups)
+    #piece_list[0].score.show()
