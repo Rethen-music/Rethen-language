@@ -1,7 +1,7 @@
 from music21 import *
 class Bar:
-    measure = stream.base.Measure()
-    times_signature = None
+    measure = None
+    time_signature = None
     voices = []
     
     sound_duration = None
@@ -13,3 +13,5 @@ class Bar:
     key = None
     tempo = None
     
+    def __init__(self):
+        self.measure = stream.base.Measure()

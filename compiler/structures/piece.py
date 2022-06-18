@@ -1,6 +1,6 @@
 from music21 import *
 class Piece:
-    score = stream.Score()
+    score = None
     time_signature = None
     groups = []
 
@@ -14,4 +14,6 @@ class Piece:
     tempo = None
 
     def __init__(self):
+        self.score = stream.Score()
         self.score.metadata = metadata.Metadata()
+        

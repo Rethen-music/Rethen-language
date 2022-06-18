@@ -1,6 +1,6 @@
 from music21 import *
 class Group:
-    staff_group = layout.StaffGroup()
+    staff_group = None
     staffs = []
     time_signature = None
 
@@ -12,3 +12,6 @@ class Group:
     description = None
     key = None
     tempo = None
+
+    def __init__(self):
+        self.measure = layout.StaffGroup()

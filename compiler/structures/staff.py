@@ -1,6 +1,6 @@
 from music21 import *
 class Staff:
-    staff = layout.Staff()
+    staff = None
     time_signature = None
     bars= []
 
@@ -12,3 +12,6 @@ class Staff:
     description = None
     key = None
     tempo = None
+
+    def __init__(self):
+        self.staff = layout.Staff()
