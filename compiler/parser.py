@@ -172,6 +172,8 @@ def p_staff_attribute(p):
             currentStaff.times_signature =  meter.TimeSignature(p[2][1:-1])
     pass                
 
+
+repeat_bar = 1
 def p_create_bar(p):
     """
     create_bar : CREATE BAR COLON_SIGN
@@ -181,16 +183,22 @@ def p_create_bar(p):
     global measure_list
     global currentMeasure
     global voice_list
+    global repeat_bar
 
     if currentMeasure is not None:
         currentMeasure.voices = copy.deepcopy(voice_list)
-        measure_list.append(currentMeasure)
+        for i in range(repeat_bar):
+            measure_list.append(copy.deepcopy(currentMeasure))
+        repeat_bar = 1
         currentMeasure = None
         voice_list.clear()
     if currentMeasure is None:
         currentMeasure = Bar()
+    if p[3] == "repeat":
+        repeat_bar = int(p[4][1:-1])
     pass
 
+repeat_staff = 1
 def p_create_staff(p):
     """
     create_staff : CREATE STAFF COLON_SIGN
@@ -202,22 +210,30 @@ def p_create_staff(p):
     global staff_list
     global currentMeasure 
     global currentStaff
+    global repeat_staff
+    global repeat_bar
 
     if currentMeasure is not None:
         currentMeasure.voices = copy.deepcopy(voice_list)
-        measure_list.append(currentMeasure)
+        for i in range(repeat_bar):
+            measure_list.append(copy.deepcopy(currentMeasure))
+        repeat_bar = 1
         currentMeasure = None
         voice_list.clear()
     if currentStaff is not None:
         currentStaff.bars = copy.deepcopy(measure_list)
         measure_list.clear()
-        staff_list.append(currentStaff)
+        for i in range(repeat_staff):
+            staff_list.append(copy.deepcopy(currentStaff))
         currentStaff = None
-        
+        repeat_staff = 1
     if currentStaff is None:
         currentStaff = Staff()
+    if p[3] == "repeat":
+        repeat_staff = int(p[4][1:-1])
     pass
 
+repeat_group = 1
 def p_create_group(p):
     """
     create_group : CREATE GROUP COLON_SIGN
@@ -231,26 +247,37 @@ def p_create_group(p):
     global currentMeasure 
     global currentStaff
     global currentGroup
+    global repeat_staff
+    global repeat_bar
+    global repeat_group
 
     if currentMeasure is not None:
         currentMeasure.voices = copy.deepcopy(voice_list)
-        measure_list.append(currentMeasure)
+        for i in range(repeat_bar):
+            measure_list.append(copy.deepcopy(currentMeasure))
+        repeat_bar = 1
         currentMeasure = None
         voice_list.clear()
     if currentStaff is not None:
         currentStaff.bars = copy.deepcopy(measure_list)
         measure_list.clear()
-        staff_list.append(currentStaff)
+        for i in range(repeat_staff):
+            staff_list.append(copy.deepcopy(currentStaff))
         currentStaff = None
+        repeat_staff = 1
     if currentGroup is not None:
         currentGroup.staffs = copy.deepcopy(staff_list)
         staff_list.clear()
-        group_list.append(currentGroup)
+        for i in range(repeat_group):
+            group_list.append(copy.deepcopy(currentGroup))
+        repeat_group = 1
         currentGroup = None
     
     if currentGroup is None:
         currentGroup = Group()
 
+    if p[3] == "repeat":
+        repeat_group = int(p[4][1:-1])
     pass
 
 def p_start(p):
@@ -260,6 +287,7 @@ def p_start(p):
     print("start")
     pass
 
+repeat_piece = 1
 def p_create_piece(p):
     """
     create_piece : CREATE PIECE COLON_SIGN
@@ -276,30 +304,45 @@ def p_create_piece(p):
     global currentStaff
     global currentPiece
     global currentGroup
+    global repeat_staff
+    global repeat_bar
+    global repeat_group
+    global repeat_piece
 
     if currentMeasure is not None:
         currentMeasure.voices = copy.deepcopy(voice_list)
-        measure_list.append(currentMeasure)
+        for i in range(repeat_bar):
+            measure_list.append(copy.deepcopy(currentMeasure))
+        repeat_bar = 1
         currentMeasure = None
         voice_list.clear()
     if currentStaff is not None:
         currentStaff.bars = copy.deepcopy(measure_list)
         measure_list.clear()
-        staff_list.append(currentStaff)
+        for i in range(repeat_staff):
+            staff_list.append(copy.deepcopy(currentStaff))
         currentStaff = None
+        repeat_staff = 1
     if currentGroup is not None:
         currentGroup.staffs = copy.deepcopy(staff_list)
         staff_list.clear()
-        group_list.append(currentGroup)
+        for i in range(repeat_group):
+            group_list.append(copy.deepcopy(currentGroup))
+        repeat_group = 1
         currentGroup = None
     if currentPiece is not None:
         currentPiece.groups = copy.deepcopy(group_list)
         group_list.clear()
-        piece_list.append(currentPiece)
+        for i in range(repeat_piece):
+            piece_list.append(copy.deepcopy(currentPiece))
+        repeat_piece = 1
         currentPiece = None
 
     if currentPiece is None:
         currentPiece = Piece()
+
+    if p[3] == "repeat":
+        repeat_piece = int(p[4][1:-1])
     pass
 
 def p_zero_tabs(p):
@@ -823,7 +866,7 @@ def build_piece():
                 piece.score.insert(0, staff.staff)
             group.staff_group = layout.StaffGroup([x.staff for x in group.staffs])
             piece.score.insert(0, group.staff_group)
-    piece.score.show()
+   # piece.score.show()
     """
                     #if bar.time_signature != None: bar.measure.append(bar.time_signature)
                     
@@ -849,6 +892,8 @@ def showNotes():
     build_piece()
     print("showNotes")
     print(piece_list)
+    piece_list[2].score.show()
+    """
     print(piece_list[0].groups[0])
     print(piece_list[0].groups[0].staffs)
 
@@ -862,4 +907,4 @@ def showNotes():
     print(piece_list[0].groups[0].staffs[0].bars[0].voices[0].sounds[0].note)
     print(piece_list[0].groups[0].staffs[0].bars[0].measure.voices)
     #piece_list[0].groups[0].staffs[1].bars[0].measure.show()
-    #piece_list[0].score.show()
+    #piece_list[0].score.show()"""
