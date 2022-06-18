@@ -9,6 +9,7 @@ from structures.expression import Expression
 from matplotlib.colors import NoNorm
 import ply.yacc as yacc
 from music21 import *
+import copy
 
 sound_clef = None
 sound_articulation = None
@@ -182,7 +183,7 @@ def p_create_bar(p):
     global voice_list
 
     if currentMeasure is not None:
-        currentMeasure.voices = voice_list.copy()
+        currentMeasure.voices = copy.deepcopy(voice_list)
         measure_list.append(currentMeasure)
         currentMeasure = None
         voice_list.clear()
@@ -203,12 +204,12 @@ def p_create_staff(p):
     global currentStaff
 
     if currentMeasure is not None:
-        currentMeasure.voices = voice_list.copy()
+        currentMeasure.voices = copy.deepcopy(voice_list)
         measure_list.append(currentMeasure)
         currentMeasure = None
         voice_list.clear()
     if currentStaff is not None:
-        currentStaff.bars = measure_list.copy()
+        currentStaff.bars = copy.deepcopy(measure_list)
         measure_list.clear()
         staff_list.append(currentStaff)
         currentStaff = None
@@ -232,17 +233,17 @@ def p_create_group(p):
     global currentGroup
 
     if currentMeasure is not None:
-        currentMeasure.voices = voice_list.copy()
+        currentMeasure.voices = copy.deepcopy(voice_list)
         measure_list.append(currentMeasure)
         currentMeasure = None
         voice_list.clear()
     if currentStaff is not None:
-        currentStaff.bars = measure_list.copy()
+        currentStaff.bars = copy.deepcopy(measure_list)
         measure_list.clear()
         staff_list.append(currentStaff)
         currentStaff = None
     if currentGroup is not None:
-        currentGroup.staffs = staff_list.copy()
+        currentGroup.staffs = copy.deepcopy(staff_list)
         staff_list.clear()
         group_list.append(currentGroup)
         currentGroup = None
@@ -277,22 +278,22 @@ def p_create_piece(p):
     global currentGroup
 
     if currentMeasure is not None:
-        currentMeasure.voices = voice_list.copy()
+        currentMeasure.voices = copy.deepcopy(voice_list)
         measure_list.append(currentMeasure)
         currentMeasure = None
         voice_list.clear()
     if currentStaff is not None:
-        currentStaff.bars = measure_list.copy()
+        currentStaff.bars = copy.deepcopy(measure_list)
         measure_list.clear()
         staff_list.append(currentStaff)
         currentStaff = None
     if currentGroup is not None:
-        currentGroup.staffs = staff_list.copy()
+        currentGroup.staffs = copy.deepcopy(staff_list)
         staff_list.clear()
         group_list.append(currentGroup)
         currentGroup = None
     if currentPiece is not None:
-        currentPiece.groups = group_list.copy()
+        currentPiece.groups = copy.deepcopy(group_list)
         group_list.clear()
         piece_list.append(currentPiece)
         currentPiece = None
@@ -434,7 +435,7 @@ def p_expression(p):
                 msg = "Wrong expression: i>={}".format(number+1)
                 raise Exception(msg)
             else:
-                indices.union(numbers)
+                indices = indices.union(numbers)
 
         elif p[2] == "<=":
             numbers = set(range(len(sounds_list))).intersection(set(range(0,number+1)))
@@ -442,7 +443,7 @@ def p_expression(p):
                 msg = "Wrong expression: i<={}".format(number+1)
                 raise Exception(msg)
             else:
-                indices.union(numbers)
+                indices = indices.union(numbers)
 
         elif p[2] == ">":
             numbers = set(range(len(sounds_list))).intersection(set(range(number+1,len(sounds_list))))
@@ -450,21 +451,21 @@ def p_expression(p):
                 msg = "Wrong expression: i>{}".format(number+1)
                 raise Exception(msg)
             else:
-                indices.union(numbers)
+                indices = indices.union(numbers)
         elif p[2] == "<":
             numbers = set(range(len(sounds_list))).intersection(set(range(0,number)))
             if len(numbers) == 0:
                 msg = "Wrong expression: i<{}".format(number+1)
                 raise Exception(msg)
             else:
-                indices.union(numbers)
+                indices = indices.union(numbers)
 
 def repeat_sounds(x):
     print("repeat_sounds")
     global sounds_list
     result = []
     for i in range(0,int(x)):
-        result += sounds_list
+        result += copy.deepcopy(sounds_list)
     sounds_list = result
 
 def apply_attributes():
@@ -482,16 +483,16 @@ def apply_attributes():
     
     for i in indices:
         if sound_clef != None: 
-            sounds_list[i].clef = sound_clef
+            sounds_list[i].clef = copy.deepcopy(sound_clef)
         if sound_key != None: 
-            sounds_list[i].key = sound_key
+            sounds_list[i].key = copy.deepcopy(sound_key)
         if sound_dynamics != None:
-            sounds_list[i].dynamics = sound_dynamics
-        if sound_articulation != None: sounds_list[i].note.articulations.append(sound_articulation)            
-        if sound_lyrics != None: sounds_list[i].note.addLyric(sound_lyrics)
-        if sound_description != None: sounds_list[i].note.addLyric(sound_description)
-        if sound_tempo != None: sounds_list[i].tempo(sound_tempo)
-        if sound_duration != None: sounds_list[i].note.duration = sound_duration 
+            sounds_list[i].dynamics = copy.deepcopy(sound_dynamics)
+        if sound_articulation != None: sounds_list[i].articulation = copy.deepcopy(sound_articulation)
+        if sound_lyrics != None: sounds_list[i].lyrics = copy.deepcopy(sound_lyrics)
+        if sound_description != None: sounds_list[i].description = copy.deepcopy(sound_description)
+        if sound_tempo != None: sounds_list[i].tempo = copy.deepcopy(sound_tempo)
+        if sound_duration != None: sounds_list[i].sound_duration = copy.deepcopy(sound_duration) 
 
     sound_clef = None
     sound_articulation = None
@@ -535,7 +536,7 @@ def p_sounds_list(p):
     global sounds_list
     global voice_list
     voice = Voice()
-    voice.sounds = sounds_list.copy()
+    voice.sounds = copy.deepcopy(sounds_list)
     sounds_list.clear()
     voice_list.append(voice)
     pass
@@ -752,58 +753,113 @@ def p_empty(p):
     pass
 
 def inherit_attributes():
+    print("inherit_attributes")
     for piece in piece_list:
         for group in piece.groups:
-            if group.sound_duration is None: group.sound_duration = piece.sound_duration
-            if group.clef is None: group.clef = piece.clef
-            if group.articulation is None: group.articulation = piece.articulation
-            if group.dynamics is None: group.dynamics = piece.dynamics
-            if group.lyrics is None: group.lyrics = piece.lyrics
-            if group.description is None: group.description = piece.description
-            if group.key is None: group.key = piece.key
-            if group.tempo is None: group.tempo = piece.tempo
-            if group.time_signature is None: group.time_signature = piece.time_signature
+            if group.sound_duration is None: group.sound_duration = copy.deepcopy(piece.sound_duration)
+            if group.clef is None: group.clef = copy.deepcopy(piece.clef)
+            if group.articulation is None: group.articulation = copy.deepcopy(piece.articulation)
+            if group.dynamics is None: group.dynamics = copy.deepcopy(piece.dynamics)
+            if group.lyrics is None: group.lyrics = copy.deepcopy(piece.lyrics)
+            if group.description is None: group.description = copy.deepcopy(piece.description)
+            if group.key is None: group.key = copy.deepcopy(piece.key)
+            if group.tempo is None: group.tempo = copy.deepcopy(piece.tempo)
+            if group.time_signature is None: group.time_signature =copy.deepcopy(piece.time_signature)
 
             for staff in group.staffs:
-                if staff.sound_duration is None: staff.sound_duration = group.sound_duration
-                if staff.clef is None: staff.clef = group.clef
-                if staff.articulation is None: staff.articulation = group.articulation
-                if staff.dynamics is None: staff.dynamics = group.dynamics
-                if staff.lyrics is None: staff.lyrics = group.lyrics
-                if staff.description is None: staff.description = group.description
-                if staff.key is None: staff.key = group.key
-                if staff.tempo is None: staff.tempo = group.tempo
-                if staff.time_signature is None: staff.time_signature = piece.time_signature
+                if staff.sound_duration is None: staff.sound_duration = copy.deepcopy(group.sound_duration)
+                if staff.clef is None: staff.clef = copy.deepcopy(group.clef)
+                if staff.articulation is None: staff.articulation = copy.deepcopy(group.articulation)
+                if staff.dynamics is None: staff.dynamics = copy.deepcopy(group.dynamics)
+                if staff.lyrics is None: staff.lyrics = copy.deepcopy(group.lyrics)
+                if staff.description is None: staff.description = copy.deepcopy(group.description)
+                if staff.key is None: staff.key = copy.deepcopy(group.key)
+                if staff.tempo is None: staff.tempo = copy.deepcopy(group.tempo)
+                if staff.time_signature is None: staff.time_signature = copy.deepcopy(piece.time_signature)
 
                 for bar in staff.bars:
-                    if bar.sound_duration is None: bar.sound_duration = staff.sound_duration
-                    if bar.clef is None: bar.clef = staff.clef
-                    if bar.articulation is None: bar.articulation = staff.articulation
-                    if bar.dynamics is None: bar.dynamics = staff.dynamics
-                    if bar.lyrics is None: bar.lyrics = staff.lyrics
-                    if bar.description is None: bar.description = staff.description
-                    if bar.key is None: bar.key = staff.key
-                    if bar.tempo is None: bar.tempo = staff.tempo
-                    if bar.time_signature is None: bar.time_signature = piece.time_signature
+                    if bar.sound_duration is None: bar.sound_duration = copy.deepcopy(staff.sound_duration)
+                    if bar.clef is None: bar.clef = copy.deepcopy(staff.clef)
+                    if bar.articulation is None: bar.articulation = copy.deepcopy(staff.articulation)
+                    if bar.dynamics is None: bar.dynamics = copy.deepcopy(staff.dynamics)
+                    if bar.lyrics is None: bar.lyrics = copy.deepcopy(staff.lyrics)
+                    if bar.description is None: bar.description = copy.deepcopy(staff.description)
+                    if bar.key is None: bar.key = copy.deepcopy(staff.key)
+                    if bar.tempo is None: bar.tempo = copy.deepcopy(staff.tempo)
+                    if bar.time_signature is None: bar.time_signature = copy.deepcopy(piece.time_signature)
 
                     for voice in bar.voices:
                         for sound in voice.sounds:
-                            if sound.sound_duration is None: sound.sound_duration = bar.sound_duration
-                            if sound.clef is None: sound.clef = bar.clef
-                            if sound.articulation is None: sound.articulation = bar.articulation
-                            if sound.dynamics is None: sound.dynamics = bar.dynamics
-                            if sound.lyrics is None: sound.lyrics = bar.lyrics
-                            if sound.description is None: sound.description = bar.description
-                            if sound.key is None: sound.key = bar.key
-                            if sound.tempo is None: sound.tempo = bar.tempo
-                            if sound.time_signature is None: sound.time_signature = piece.time_signature
+                            if sound.sound_duration is None: sound.sound_duration = copy.deepcopy(bar.sound_duration)
+                            if sound.clef is None: sound.clef = copy.deepcopy(bar.clef)
+                            if sound.articulation is None: sound.articulation = copy.deepcopy(bar.articulation)
+                            if sound.dynamics is None: sound.dynamics = copy.deepcopy(bar.dynamics)
+                            if sound.lyrics is None: sound.lyrics = copy.deepcopy(bar.lyrics)
+                            if sound.description is None: sound.description = copy.deepcopy(bar.description)
+                            if sound.key is None: sound.key = copy.deepcopy(bar.key)
+                            if sound.tempo is None: sound.tempo = copy.deepcopy(bar.tempo)
+                            #if sound.time_signature is None: sound.time_signature = piece.time_signature
     pass
 
+def build_piece():
+    inherit_attributes()
+    print("build_piece")
+    i = 0
+    for piece in piece_list:
+        for group in piece.groups:
+            for staff in group.staffs:
+                for bar in staff.bars:
+                    for voice in bar.voices:
+                        for sound in voice.sounds:
+                            if sound.lyrics != None: sound.note.addLyric(sound.lyrics)
+                            if sound.description != None: sound.note.addLyric(sound.description)
+                            if sound.articulation != None: sound.note.articulations.append(sound.articulation)
+                            if sound.sound_duration != None: sound.note.duration = sound.sound_duration
+                            #if sound.clef != None: sound.clef = sound.clef
+                            voice.voice.append(sound.note)
+                        
+                        bar.measure.append(voice.voice)
+                    staff.staff.append(bar.measure)
+                piece.score.insert(0, staff.staff)
+            group.staff_group = layout.StaffGroup([x.staff for x in group.staffs])
+            piece.score.insert(0, group.staff_group)
+    piece.score.show()
+    """
+                    #if bar.time_signature != None: bar.measure.append(bar.time_signature)
+                    
+                        
+                        
+                            
+                """
+
+
+    """
+     if sound_clef != None: 
+         sounds_list[i].clef = sound_clef
+        if sound_key != None: 
+            sounds_list[i].key = sound_key
+        if sound_dynamics != None:
+            sounds_list[i].dynamics = sound_dynamics 
+        if sound_tempo != None: sounds_list[i].tempo = sound_tempo
+                            """
+    pass
+
+
 def showNotes():
+    build_piece()
     print("showNotes")
     print(piece_list)
     print(piece_list[0].groups[0])
     print(piece_list[0].groups[0].staffs)
-    print(piece_list[0].groups[0].staffs[0].bars)
+
+    print(piece_list[0].groups[0].staffs[0].bars[0])
     print(piece_list[0].groups[0].staffs[0].bars[0].voices)
+
+    print(piece_list[0].groups[0].staffs[0].bars[1]) 
+    print(piece_list[0].groups[0].staffs[0].bars[1].voices)
+
+    print(piece_list[0].groups[0].staffs[0].bars[0].voices[0].sounds)
+    print(piece_list[0].groups[0].staffs[0].bars[0].voices[0].sounds[0].note)
+    print(piece_list[0].groups[0].staffs[0].bars[0].measure.voices)
+    #piece_list[0].groups[0].staffs[1].bars[0].measure.show()
     #piece_list[0].score.show()

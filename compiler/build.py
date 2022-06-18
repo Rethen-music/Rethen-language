@@ -1,7 +1,7 @@
 from scanner import *
 from parser import * 
 
-parser = yacc.yacc(start='create')
+parser = yacc.yacc(start='start')
 text = data #file.read()
 parser.parse(text, lexer=lexer)
 

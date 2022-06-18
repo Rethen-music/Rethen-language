@@ -142,7 +142,11 @@ create piece:
 data2 = '''lyrics="sss"'''
 datap = ""
 data3 = '''     [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]'''
-data = '''
+data222 = """
+create piece:
+
+"""
+data1111 = '''
 create piece:
     author = "Frideric Chopin"
     title = "Polonaise"
@@ -162,7 +166,35 @@ create piece:
         create staff:
             clef(bass)
             create bar:
-                [{C,'1/16'},{A,'1/16',tempo="adagio"},{R,'1/6'}] repeat(8) & apply [,articulation(staccato),description="vibrato",lyrics="aua"] for [1,i>5,i<2,3]
+                [{C},{A},{R}] repeat(8) & apply [,clef(bass),key(C-sharp),dynamics(ppp),tempo="adagio",'1/16',articulation(staccato),description="vibrato",lyrics="aua"] for [i<4,16]
+                [{F},{G},{R}] repeat(8) & apply [,clef(bass),key(C-sharp),dynamics(ppp),tempo="adagio",'1/16',articulation(staccato),description="vibrato",lyrics="aua"] for [i<4,16]
+ create piece:
+ '''
+ 
+
+
+data = '''
+create piece:
+    author = "Frideric Chopin"
+    title = "Polonaise"
+    time_signature(1/4)
+    key(c-flat)
+    create group:
+        create staff:
+            clef(alto)
+            time_signature(1/2)
+            create bar:
+                time_signature(3/8)
+                [{C,'1/2'},{A,'1/4',key(d),dynamics(cresc),description="vibrato",lyrics="slowo"}]
+                [{D,'1/2'},{G,'1/2'}]
+            create bar:
+                [{D,'1'},{D,'1'}]
+                [{E,'1'}]
+        create staff:
+            clef(bass)
+            create bar:
+                [{F,'1/16'},{D}] repeat(8) & apply [,'1/16'] for [1]
+                [{C,'1'},{A},{R}] repeat(8) & apply [,clef(bass),key(C-sharp),dynamics(ppp),tempo="adagio",'1/16',articulation(staccato),description="vibrato",lyrics="aua"] for [i<4,16]
  create piece:
  '''
  
