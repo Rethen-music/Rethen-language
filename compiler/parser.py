@@ -855,71 +855,61 @@ def build_piece():
     for piece in piece_list:
         for group in piece.groups:
             for staff in group.staffs:
+                clef_name = ''
+                dynamics_value = ''
+                tempo_value = ''
                 for bar in staff.bars:
+                    if bar.measure.clef != None:
+                        clef_name = bar.measure.clef.name
+
                     for voice in bar.voices:
                         for sound in voice.sounds:
                             if sound.lyrics != None: sound.note.addLyric(sound.lyrics)
                             if sound.description != None: sound.note.addLyric(sound.description)
                             if sound.articulation != None: sound.note.articulations.append(sound.articulation)
                             if sound.sound_duration != None: sound.note.duration = sound.sound_duration
-                            #if sound.clef != None: sound.clef = sound.clef
+
                             voice.voice.append(sound.note)
                         bar.measure.append(voice.voice)
+
+                    for voice in bar.voices:
+                        for sound in voice.sounds:
+
+                            #insert clef if changed
+                            if sound.clef != None:
+                                if sound.clef.name != clef_name:
+                                    clef_name = sound.clef.name
+                                    bar.measure.insert(sound.note.offset, sound.clef)
+                            #insert key singature if changed
+                            if sound.key != None:
+                                    bar.measure.insert(sound.note.offset, sound.key)
+                            #insert dynamics if changed
+                            if sound.dynamics != None:
+                                if sound.dynamics.value != dynamics_value:
+                                    dynamics_value = sound.dynamics.value
+                                    bar.measure.insert(sound.note.offset, sound.dynamics)
+                            #insert tempo if changed
+                            if sound.tempo != None:
+                                if sound.tempo.text != tempo_value:
+                                    tempo_value = sound.tempo.text
+                                    bar.measure.insert(sound.note.offset, sound.tempo)
+
+                    staff.staff.append(bar.measure)
                     #check voices duration
                     durations = set([voice.voice.duration.quarterLength for voice in bar.voices])
                     if len(durations) != 1:
                         raise Exception("Diffrent voices durations")
+                    
 
-                    staff.staff.append(bar.measure)
                 piece.score.append(staff.staff)
             group.staff_group = layout.StaffGroup([x.staff for x in group.staffs])
         piece.score.insert(0, group.staff_group)
-   # piece.score.show()
-    """
-                    #if bar.time_signature != None: bar.measure.append(bar.time_signature)
-                    
-                        
-                        
-                            
-                """
 
-
-    """
-     if sound_clef != None: 
-         sounds_list[i].clef = sound_clef
-        if sound_key != None: 
-            sounds_list[i].key = sound_key
-        if sound_dynamics != None:
-            sounds_list[i].dynamics = sound_dynamics 
-        if sound_tempo != None: sounds_list[i].tempo = sound_tempo
-                            """
     pass
 
 
 def showNotes():
     build_piece()
     print("showNotes")
-    print(piece_list)
-    
-    
-    #print(piece_list[0].groups[0])
-    #print(piece_list[0].groups[0].staffs)
 
-    #print(piece_list[0].groups[0].staffs[1].bars)
-    """
-    print(piece_list[0].groups[0].staffs[0].bars[0].voices)
-
-    print(piece_list[0].groups[0].staffs[0].bars[1]) 
-    print(piece_list[0].groups[0].staffs[0].bars[1].voices)
-
-    print(piece_list[0].groups[0].staffs[0].bars[0].voices[0].sounds)
-    print(piece_list[0].groups[0].staffs[0].bars[0].voices[0].sounds[0].note)
-    print(piece_list[0].groups[0].staffs[0].bars[0].measure.voices)
-    #piece_list[0].groups[0].staffs[1].bars[0].measure.show()
-    #piece_list[0].score.show()"""
-    #print(piece_list[0].groups[0].staffs[1].staff)
-    #print(piece_list[0].groups[0].staffs[1].bars[0].measure)
-    #piece_list[0].groups[0].staffs[1].staff.show('text')
-    #piece_list[0].groups[0].staffs[1].staff.show()
-    #piece_list[0].groups[0].staffs[1].bars[0].measure.show()
-    piece_list[2].score.show()
+    piece_list[0].score.show()
