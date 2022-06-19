@@ -80,7 +80,7 @@ def p_piece_attribute(p):
         elif p[1] == "description":
             currentPiece.duration = p[3][1:-1]
         elif p[1] == "sound_duration":
-            currentPiece.sound_duration = p[3][1:-1]
+            currentPiece.sound_duration = parse_sound_duration(p[3])
     pass
 
 
@@ -123,7 +123,7 @@ def p_group_attribute(p):
         elif p[1] == "description":
             currentGroup.duration = p[3][1:-1]
         elif p[1] == "sound_duration":
-            currentGroup.sound_duration = p[3][1:-1]
+            currentGroup.sound_duration = parse_sound_duration(p[3])
         else:
             currentGroup.times_signature =  meter.TimeSignature(p[3][1:-1])
     pass
@@ -167,7 +167,7 @@ def p_staff_attribute(p):
         elif p[1] == "description":
             currentStaff.duration = p[3][1:-1]
         elif p[1] == "sound_duration":
-            currentStaff.sound_duration = p[3][1:-1]
+            currentStaff.sound_duration = parse_sound_duration(p[3])
         else:
             currentStaff.times_signature =  meter.TimeSignature(p[2][1:-1])
     pass                
@@ -426,7 +426,7 @@ def p_bar_attribute(p):
         elif p[1] == "description":
             currentMeasure.duration = p[3][1:-1]
         elif p[1] == "sound_duration":
-            currentMeasure.sound_duration = p[3][1:-1]
+            currentMeasure.sound_duration = parse_sound_duration(p[3])
         else:
             currentMeasure.times_signature =  meter.TimeSignature(p[2][1:-1])
     pass
@@ -644,21 +644,21 @@ def p_expression_for_sound(p):
     
     currentSound = Sound()
     currentSound.note = note.Note(p[1])
-    if sound_lyrics != None: currentSound.lyrics = sound_lyrics
+    if sound_lyrics != None: currentSound.lyrics = copy.deepcopy(sound_lyrics)
         #currentSound.note.addLyric(sound_lyrics)
-    if sound_articulation != None: currentSound.articulation = sound_articulation
+    if sound_articulation != None: currentSound.articulation = copy.deepcopy(sound_articulation)
         #currentSound.note.articulations.append(sound_articulation)
-    if sound_clef != None: currentSound.clef = sound_clef
-    if sound_key != None: currentSound.key = sound_key
-    if sound_dynamics != None:currentSound.dynamics = sound_dynamics
+    if sound_clef != None: currentSound.clef = copy.deepcopy(sound_clef)
+    if sound_key != None: currentSound.key = copy.deepcopy(sound_key)
+    if sound_dynamics != None:currentSound.dynamics = copy.deepcopy(sound_dynamics)
     # dynamics.Dynamic(p[4][1:-1])
-    if sound_duration != None: currentSound.sound_duration = sound_duration
+    if sound_duration != None: currentSound.sound_duration = copy.deepcopy(sound_duration)
         #currentSound.note.duration = sound_duration
-    if sound_description != None: currentSound.description = sound_description
-    if sound_tempo != None: currentSound.tempo = sound_tempo
+    if sound_description != None: currentSound.description = copy.deepcopy(sound_description)
+    if sound_tempo != None: currentSound.tempo = copy.deepcopy(sound_tempo)
         #currentSound.note.addLyric(sound_description)
 
-    sounds_list.append(currentSound)
+    sounds_list.append(copy.deepcopy(currentSound))
 
 
 
@@ -770,14 +770,18 @@ def p_sound_attribute(p):
             sound_tempo = tempo.MetronomeMark(p[4][1:-1])
         else: #sound duration
             if sound_duration is None:
-                d = duration.Duration()
-                numbers =  [float(x) for x in p[2][1:-1].split('/')]
-                if len(numbers) == 2:
-                    d.quarterLength = numbers[0]/numbers[1] * 4
-                elif len(numbers) == 1:
-                    d.quarterLength = numbers[0] * 4
-                sound_duration = d
+                sound_duration = parse_sound_duration(p[2])
     pass
+
+def parse_sound_duration(str):
+    d = duration.Duration()
+    numbers =  [float(x) for x in str[1:-1].split('/')]
+    if len(numbers) == 2:
+        d.quarterLength = numbers[0]/numbers[1] * 4
+    elif len(numbers) == 1:
+        d.quarterLength = numbers[0] * 4
+    print(d)
+    return d
 
 def p_additionals_for_rest(p):
     """
@@ -860,12 +864,16 @@ def build_piece():
                             if sound.sound_duration != None: sound.note.duration = sound.sound_duration
                             #if sound.clef != None: sound.clef = sound.clef
                             voice.voice.append(sound.note)
-                        
                         bar.measure.append(voice.voice)
+                    #check voices duration
+                    durations = set([voice.voice.duration.quarterLength for voice in bar.voices])
+                    if len(durations) != 1:
+                        raise Exception("Diffrent voices durations")
+
                     staff.staff.append(bar.measure)
-                piece.score.insert(0, staff.staff)
+                piece.score.append(staff.staff)
             group.staff_group = layout.StaffGroup([x.staff for x in group.staffs])
-            piece.score.insert(0, group.staff_group)
+        piece.score.insert(0, group.staff_group)
    # piece.score.show()
     """
                     #if bar.time_signature != None: bar.measure.append(bar.time_signature)
@@ -892,12 +900,13 @@ def showNotes():
     build_piece()
     print("showNotes")
     print(piece_list)
-    piece_list[2].score.show()
-    """
-    print(piece_list[0].groups[0])
-    print(piece_list[0].groups[0].staffs)
+    
+    
+    #print(piece_list[0].groups[0])
+    #print(piece_list[0].groups[0].staffs)
 
-    print(piece_list[0].groups[0].staffs[0].bars[0])
+    #print(piece_list[0].groups[0].staffs[1].bars)
+    """
     print(piece_list[0].groups[0].staffs[0].bars[0].voices)
 
     print(piece_list[0].groups[0].staffs[0].bars[1]) 
@@ -908,3 +917,9 @@ def showNotes():
     print(piece_list[0].groups[0].staffs[0].bars[0].measure.voices)
     #piece_list[0].groups[0].staffs[1].bars[0].measure.show()
     #piece_list[0].score.show()"""
+    #print(piece_list[0].groups[0].staffs[1].staff)
+    #print(piece_list[0].groups[0].staffs[1].bars[0].measure)
+    #piece_list[0].groups[0].staffs[1].staff.show('text')
+    #piece_list[0].groups[0].staffs[1].staff.show()
+    #piece_list[0].groups[0].staffs[1].bars[0].measure.show()
+    piece_list[2].score.show()
