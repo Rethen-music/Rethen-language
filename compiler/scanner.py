@@ -118,61 +118,6 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
-# 
-# [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]
-data7 = '''
-create bar:
-    time_signature(1/4)
-    [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]
-    [{E4,'1/2'},{F4,'1/2'}]
-    [{G4,'1/2'},{B4,'1/2'}]
-'''
-
-data99 = '''
-create piece:
-    author = "Marcin Retajczyk"
-    title = "Danielo Henelllo"
-    create group repeat(5):
-        create staff:
-'''
-data0 = """
-create piece:
-create piece:
-"""
-data2 = '''lyrics="sss"'''
-datap = ""
-data3 = '''     [{C4,'1/2'},{D4,'1/2',clef(bass),key(c-flat)},{G4,'1/2',clef(treble),lyrics="sol"}]'''
-data222 = """
-create piece:
-
-"""
-data1111 = '''
-create piece:
-    author = "Frideric Chopin"
-    title = "Polonaise"
-    time_signature(1/4)
-    key(c-flat)
-    create group:
-        create staff:
-            clef(alto)
-            time_signature(1/2)
-            create bar:
-                time_signature(3/8)
-                [{C,'1/2'},{A,'1/4',key(d),dynamics(cresc),description="vibrato",lyrics="slowo"}]
-                [{D,'1/2'},{G,'1/2'}]
-            create bar:
-                [{D,'1'}]
-                [{E,'1'}]
-        create staff:
-            clef(bass)
-            create bar:
-                [{C},{A},{R}] repeat(8) & apply [,clef(bass),key(C-sharp),dynamics(ppp),tempo="adagio",'1/16',articulation(staccato),description="vibrato",lyrics="aua"] for [i<4,16]
-                [{F},{G},{R}] repeat(8) & apply [,clef(bass),key(C-sharp),dynamics(ppp),tempo="adagio",'1/16',articulation(staccato),description="vibrato",lyrics="aua"] for [i<4,16]
- create piece:
- '''
- 
-
-
 data = '''
 create piece:
     author = "Frideric Chopin"
@@ -185,19 +130,17 @@ create piece:
             time_signature(1/2)
             create bar:
                 time_signature(3/8)
-                [{C,'1/2'},{A,'1/4',key(d),dynamics(cresc),description="vibrato",lyrics="slowo"}]
-                [{D,'1/2'},{G,'1/2'}]
+                [{C,'1/2'},{A,'1/4',dynamics(cresc),description="vibrato",lyrics="slowo"}]
+                [{D,'1/2'},{G,'1/4'}]
             create bar:
-                [{D,'1'},{D,'1'}]
-                [{E,'1'}]
+                [{D,'1',key(g-sharp)},{B,'1',key(B-sharp)}]
+                [{E,'1'},{F,'1',key(B-sharp)}]
         create staff:
             clef(bass)
             create bar:
-                [{F,'1/16'},{D}] repeat(8) & apply [,'1/16'] for [1]
-                [{C,'1'},{A},{R}] repeat(8) & apply [,clef(bass),key(C-sharp),dynamics(ppp),tempo="adagio",'1/16',articulation(staccato),description="vibrato",lyrics="aua"] for [i<4,16]
+                [{F,'1/16'},{G},{R}] repeat(8) & apply [,clef(treble),key(C-sharp),dynamics(ppp),tempo="adagio",articulation(staccato),description="vibrato",lyrics="aua"] for [16]
  create piece:
  '''
- 
  # Give the lexer some input
 lexer.input(data)
  
