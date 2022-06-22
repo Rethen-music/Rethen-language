@@ -98,57 +98,15 @@ t_STRING = r'"[A-Za-z][A-Z a-z]*"'
 
 
 
-# A regular expression rule with some action code
 
-
-# Define a rule so we can track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
- 
- # A string containing ignored characters (spaces and tabs)
-#t_ignore  = r'[ ]{1}'
 
- # Error handling rule
 def t_error(t):
-    #print("Illegal character '%s'" % t.value[0])
     if(t.value[0] != ' '): print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
  
-# Build the lexer
 lexer = lex.lex()
 
-data = '''
-create piece:
-    author = "Frideric Chopin"
-    title = "Polonaise"
-    time_signature(1/4)
-    key(c-flat)
-    create group:
-        create staff:
-            clef(alto)
-            time_signature(1/2)
-            create bar:
-                time_signature(3/8)
-                [{C,'1/2'},{A,'1/4',dynamics(cresc),description="vibrato",lyrics="slowo"}]
-                [{D,'1/2'},{G,'1/4'}]
-            create bar:
-                [{D,'1',key(g-sharp)},{B,'1',key(B-sharp)}]
-                [{E,'1'},{F,'1',key(B-sharp)}]
-        create staff:
-            clef(bass)
-            create bar:
-                [{F,'1/16'},{G},{R}] repeat(8) & apply [,clef(treble),key(C-sharp),dynamics(ppp),tempo="adagio",articulation(staccato),description="vibrato",lyrics="aua"] for [16]
- create piece:
- '''
- # Give the lexer some input
-lexer.input(data)
- 
-tokensList = []
- # Tokenize
-while True:
-    tok = lexer.token()
-    if not tok: 
-        break      # No more input
-    tokensList.append(tok)
-
+data = None
