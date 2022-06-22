@@ -1,4 +1,5 @@
 from concurrent.futures import thread
+from socket import close
 from structures.sound import Sound
 from structures.staff import Staff
 from structures.piece import Piece
@@ -298,6 +299,21 @@ def p_create_piece(p):
     """
     logging.debug("create_piece")
 
+    global currentPiece
+    global repeat_piece
+
+    close_current_piece()
+
+    if currentPiece is None:
+        currentPiece = Piece()
+
+    if p[3] == "repeat":
+        repeat_piece = int(p[4][1:-1])
+    pass
+
+def close_current_piece():
+    logging.debug("close_current_piece")
+
     global voice_list
     global measure_list
     global staff_list
@@ -340,13 +356,6 @@ def p_create_piece(p):
             piece_list.append(copy.deepcopy(currentPiece))
         repeat_piece = 1
         currentPiece = None
-
-    if currentPiece is None:
-        currentPiece = Piece()
-
-    if p[3] == "repeat":
-        repeat_piece = int(p[4][1:-1])
-    pass
 
 def p_zero_tabs(p):
     """
@@ -931,6 +940,7 @@ def inherit_attributes():
     pass
 
 def build_piece():
+    close_current_piece()
     inherit_attributes()
     logging.debug("build_piece")
     i = 0
