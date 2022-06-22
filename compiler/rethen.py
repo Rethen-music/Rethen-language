@@ -8,6 +8,7 @@ filePath = None
 def checkArguments():
         global filePath
         global data
+        global lexer
         if(len(sys.argv)) != 5:
             msg = """
             Wrong arguments.\n
@@ -23,6 +24,7 @@ def checkArguments():
                 try:
                     f = open(filePath, "r")
                     data = f.read()
+                    lexer.input(data)
                     parser = yacc.yacc(start='start')
                     parser.parse(data, lexer=lexer)
                 except:
