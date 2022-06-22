@@ -6,6 +6,8 @@ from structures.group import Group
 from structures.voice import Voice
 from structures.bar import Bar
 from structures.expression import Expression
+import logging, sys
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 from matplotlib.colors import NoNorm
 import ply.yacc as yacc
@@ -49,7 +51,7 @@ def p_piece_attribute(p):
     | LYRICS EQUALS STRING
     | DESCRIPTION EQUALS STRING
     """
-    print("piece_attribute")
+    logging.debug("piece_attribute")
     global currentPiece
     
     if(len(p)>=3):
@@ -97,7 +99,7 @@ def p_group_attribute(p):
         | LYRICS EQUALS STRING
         | DESCRIPTION EQUALS STRING
     """
-    print("group_attribute")
+    logging.debug("group_attribute")
     global currentGroup
 
     if len(p) == 3:
@@ -116,6 +118,8 @@ def p_group_attribute(p):
                 currentGroup.articulation = articulations.Accent()
         elif p[1] == 'key':
             currentGroup.key = key.Key(parseKey(p[2][1:-1]))  
+        elif(p[1]=='time_signature'):
+            currentGroup.time_signature =  meter.TimeSignature(p[2][1:-1])
     elif len(p) == 4:
         if p[1] == "tempo":
             currentGroup.tempo = tempo.MetronomeMark(p[3][1:-1])
@@ -125,8 +129,6 @@ def p_group_attribute(p):
             currentGroup.duration = p[3][1:-1]
         elif p[1] == "sound_duration":
             currentGroup.sound_duration = parse_sound_duration(p[3])
-        else:
-            currentGroup.times_signature =  meter.TimeSignature(p[3][1:-1])
     pass
 
 def p_staff_attribute(p):
@@ -141,7 +143,7 @@ def p_staff_attribute(p):
         | LYRICS EQUALS STRING
         | DESCRIPTION EQUALS STRING
     """
-    print("staff_attribute")
+    logging.debug("staff_attribute")
     global currentStaff 
 
     if len(p) == 3:
@@ -160,6 +162,8 @@ def p_staff_attribute(p):
                 currentStaff.articulation = articulations.Accent()
         elif p[1] == 'key':
             currentStaff.key = key.Key(parseKey(p[2][1:-1]))  
+        elif(p[1]=='time_signature'):
+            currentStaff.time_signature =  meter.TimeSignature(p[2][1:-1])
     elif len(p) == 4:
         if p[1] == "tempo":
             currentStaff.tempo = tempo.MetronomeMark(p[3][1:-1])
@@ -169,8 +173,6 @@ def p_staff_attribute(p):
             currentStaff.duration = p[3][1:-1]
         elif p[1] == "sound_duration":
             currentStaff.sound_duration = parse_sound_duration(p[3])
-        else:
-            currentStaff.times_signature =  meter.TimeSignature(p[2][1:-1])
     pass                
 
 
@@ -180,7 +182,7 @@ def p_create_bar(p):
     create_bar : CREATE BAR COLON_SIGN
     | CREATE BAR REPEAT ITERATION_NUMBER COLON_SIGN
     """
-    print("create_bar")
+    logging.debug("create_bar")
     global measure_list
     global currentMeasure
     global voice_list
@@ -205,7 +207,7 @@ def p_create_staff(p):
     create_staff : CREATE STAFF COLON_SIGN
     | CREATE STAFF REPEAT ITERATION_NUMBER COLON_SIGN
     """
-    print("create_staff")
+    logging.debug("create_staff")
     global voice_list
     global measure_list
     global staff_list
@@ -240,7 +242,7 @@ def p_create_group(p):
     create_group : CREATE GROUP COLON_SIGN
     | CREATE GROUP REPEAT ITERATION_NUMBER COLON_SIGN
     """
-    print("create_group")
+    logging.debug("create_group")
     global voice_list
     global measure_list
     global staff_list
@@ -285,7 +287,7 @@ def p_start(p):
     """
     start : create_piece tabs
     """
-    print("start")
+    logging.debug("start")
     pass
 
 repeat_piece = 1
@@ -294,7 +296,7 @@ def p_create_piece(p):
     create_piece : CREATE PIECE COLON_SIGN
     | CREATE PIECE REPEAT ITERATION_NUMBER COLON_SIGN
     """
-    print("create_piece")
+    logging.debug("create_piece")
 
     global voice_list
     global measure_list
@@ -397,7 +399,7 @@ def p_bar_attribute(p):
         | LYRICS EQUALS STRING
         | DESCRIPTION EQUALS STRING
     """
-    print("bar_attribute")
+    logging.debug("bar_attribute")
     global voice_list
     global currentMeasure 
 
@@ -419,6 +421,8 @@ def p_bar_attribute(p):
                 currentMeasure.articulation = articulations.Accent()
         elif p[1] == 'key':
             currentMeasure.key = key.Key(parseKey(p[2][1:-1]))  
+        elif(p[1]=='time_signature'):
+            currentMeasure.time_signature =  meter.TimeSignature(p[2][1:-1])
     elif len(p) == 4:
         if p[1] == "tempo":
             currentMeasure.tempo = tempo.MetronomeMark(p[3][1:-1])
@@ -428,8 +432,6 @@ def p_bar_attribute(p):
             currentMeasure.duration = p[3][1:-1]
         elif p[1] == "sound_duration":
             currentMeasure.sound_duration = parse_sound_duration(p[3])
-        else:
-            currentMeasure.times_signature =  meter.TimeSignature(p[2][1:-1])
     pass
 
 def p_expression_list(p):
@@ -437,7 +439,7 @@ def p_expression_list(p):
     expression_list : expression
         | expression SEPARATOR expression_list
     """
-    print("expression_list")
+    logging.debug("expression_list")
 
 def p_expression(p):
     """
@@ -456,7 +458,7 @@ def p_expression(p):
     | NUMBER GREATER_EQUALS INDEX GREATER NUMBER
     | NUMBER GREATER_EQUALS INDEX GREATER_EQUALS NUMBER
     """
-    print("expression")
+    logging.debug("expression")
     global indices
     if len(p) == 2: #number
         number = int(p[1]) - 1
@@ -505,7 +507,7 @@ def p_expression(p):
                 indices = indices.union(numbers)
 
 def repeat_sounds(x):
-    print("repeat_sounds")
+    logging.debug("repeat_sounds")
     global sounds_list
     result = []
     for i in range(0,int(x)):
@@ -513,7 +515,7 @@ def repeat_sounds(x):
     sounds_list = result
 
 def apply_attributes():
-    print("apply_attributes")
+    logging.debug("apply_attributes")
     global sounds_list
     global sound_clef
     global sound_articulation
@@ -551,7 +553,7 @@ def p_repeat(p):
     """
     repeat : REPEAT ITERATION_NUMBER
     """
-    print("repeat")
+    logging.debug("repeat")
     global sounds_list
     repeat_sounds(p[2][1:-1])
     pass
@@ -559,9 +561,9 @@ def p_repeat(p):
 
 def p_apply(p):
     """
-    apply : APPLY LEFT_SQUARE_BRACKET additionals_for_sound RIGHT_SQUARE_BRACKET FOR LEFT_SQUARE_BRACKET expression_list RIGHT_SQUARE_BRACKET
+    apply : APPLY LEFT_SQUARE_BRACKET additionals_in_list RIGHT_SQUARE_BRACKET FOR LEFT_SQUARE_BRACKET expression_list RIGHT_SQUARE_BRACKET
     """
-    print("apply")
+    logging.debug("apply")
     global sounds_list
     global indices
     apply_attributes()
@@ -576,7 +578,7 @@ def p_sounds_list(p):
         | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET repeat AND apply
         | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET apply AND repeat
     """
-    print("sounds list")
+    logging.debug("sounds list")
     global sounds_list
     global voice_list
     voice = Voice()
@@ -592,21 +594,21 @@ def  p_sounds(p):
         | sound SEPARATOR sounds
         | rest SEPARATOR sounds
     """
-    print("sounds")
+    logging.debug("sounds")
     pass
 
 def p_sound(p):
     """
     sound :   LEFT_CURLY_BRACKET expression_for_sound  RIGHT_CURLY_BRACKET
     """
-    print("sound")
+    logging.debug("sound")
     pass
 
 def p_rest(p):
     """
     rest : LEFT_CURLY_BRACKET expression_for_rest RIGHT_CURLY_BRACKET
     """ 
-    print("rest")
+    logging.debug("rest")
     pass  
    
 # first example
@@ -629,7 +631,7 @@ def p_expression_for_sound(p):
     """
     expression_for_sound : SOUND_NAME additionals_for_sound
     """
-    print("expression for sound")
+    logging.debug("expression for sound")
     global sound_clef
     global sound_articulation
     global sound_lyrics
@@ -680,7 +682,7 @@ def p_expression_for_rest(p):
     """
     expression_for_rest : REST additionals_for_rest
     """
-    print("expression_for_rest")
+    logging.debug("expression_for_rest")
     global sound_clef
     global sound_duration
     global sound_key
@@ -707,7 +709,7 @@ def p_expression_for_rest(p):
     pass
 
 def parseKey(str):
-    print("parseKey")
+    logging.debug("parseKey")
     str = str[1:-1]
     letter = str[0]
     sign = None
@@ -724,7 +726,76 @@ def p_additionals_for_sound(p):
     additionals_for_sound : empty
     | sound_attribute additionals_for_sound
     """
-    print("additionals_for_sound")
+    logging.debug("additionals_for_sound")
+
+def p_additionals_in_list(p):
+    """
+    additionals_in_list : empty
+    | sound_attribute_in_list additionals_in_list
+    | sound_attribute_in_list SEPARATOR additionals_in_list
+    """
+    logging.debug("additionals_in_list")
+
+def p_sound_attribute_in_list(p):
+    """
+    sound_attribute_in_list : SOUND_DURATION_VALUE
+        | CLEF CLEF_VALUE
+        | ARTICULATION ARTICULATION_VALUE
+        | DYNAMICS DYNAMICS_VALUE
+        | LYRICS EQUALS STRING
+        | DESCRIPTION EQUALS STRING
+        | KEY KEY_VALUE
+        | TEMPO EQUALS STRING
+    """
+    logging.debug("sound_attribute_in_list")
+
+    global sound_clef
+    global sound_articulation
+    global sound_lyrics
+    global sound_dynamics
+    global sound_duration
+    global sound_key
+    global sound_description
+    global sounds_list
+    global sound_tempo
+
+    if len(p) >= 2:
+        if(p[1] == "key"): 
+            sound_key = key.Key(parseKey(p[2]))
+        elif(p[1] =="description"):
+            if sound_description is None:
+                sound_description = p[3][1:-1]
+        elif(p[1] =="lyrics"):  
+            if sound_lyrics is None:
+                sound_lyrics = p[3][1:-1]
+        elif(p[1] =="dynamics"):  
+            if sound_dynamics is None:
+                sound_dynamics = dynamics.Dynamic(p[2][1:-1])
+        elif(p[1] =="articulation"):
+            if sound_articulation is None:
+                if(p[2][1:-1] == "staccato"):
+                    sound_articulation = articulations.Staccato()
+                elif(p[2][1:-1] == "pizzicato"):
+                    sound_articulation = articulations.Pizzicato()
+                elif(p[2][1:-1] == "legato"):
+                    sound_articulation = articulations.DetachedLegato()
+                elif(p[2][1:-1] == "accent"):
+                    sound_articulation = articulations.Accent()
+        elif(p[1] =="clef"):
+            if sound_clef is None:
+                if(p[2][1:-1] == "treble"):
+                    sound_clef = clef.TrebleClef()
+                elif(p[2][1:-1]  == "bass"):
+                    sound_clef = clef.BassClef()
+                elif(p[2][1:-1]  == "alto"):
+                    sound_clef = clef.AltoClef() 
+        elif(p[1] =="tempo"):  
+            sound_tempo = tempo.MetronomeMark(p[3][1:-1])
+        else: #sound duration
+            if sound_duration is None:
+                sound_duration = parse_sound_duration(p[1])
+    pass
+
 
 def p_sound_attribute(p):
     """
@@ -737,7 +808,7 @@ def p_sound_attribute(p):
         | SEPARATOR KEY KEY_VALUE
         | SEPARATOR TEMPO EQUALS STRING
     """
-    print("sound_attribute")
+    logging.debug("sound_attribute")
 
     global sound_clef
     global sound_articulation
@@ -793,7 +864,6 @@ def parse_sound_duration(str):
         d.quarterLength = numbers[0]/numbers[1] * 4
     elif len(numbers) == 1:
         d.quarterLength = numbers[0] * 4
-    print(d)
     return d
 
 def p_additionals_for_rest(p):
@@ -804,16 +874,16 @@ def p_additionals_for_rest(p):
     | SEPARATOR DESCRIPTION EQUALS STRING additionals_for_sound
     | SEPARATOR KEY KEY_VALUE additionals_for_sound
     """
-    print("additionals_for_rest")
+    logging.debug("additionals_for_rest")
     pass
 
 def p_empty(p):
     'empty :'
-    print("empty")
+    logging.debug("empty")
     pass
 
 def inherit_attributes():
-    print("inherit_attributes")
+    logging.debug("inherit_attributes")
     for piece in piece_list:
         for group in piece.groups:
             if group.sound_duration is None: group.sound_duration = copy.deepcopy(piece.sound_duration)
@@ -835,7 +905,7 @@ def inherit_attributes():
                 if staff.description is None: staff.description = copy.deepcopy(group.description)
                 if staff.key is None: staff.key = copy.deepcopy(group.key)
                 if staff.tempo is None: staff.tempo = copy.deepcopy(group.tempo)
-                if staff.time_signature is None: staff.time_signature = copy.deepcopy(piece.time_signature)
+                if staff.time_signature is None: staff.time_signature = copy.deepcopy(group.time_signature)
 
                 for bar in staff.bars:
                     if bar.sound_duration is None: bar.sound_duration = copy.deepcopy(staff.sound_duration)
@@ -846,7 +916,7 @@ def inherit_attributes():
                     if bar.description is None: bar.description = copy.deepcopy(staff.description)
                     if bar.key is None: bar.key = copy.deepcopy(staff.key)
                     if bar.tempo is None: bar.tempo = copy.deepcopy(staff.tempo)
-                    if bar.time_signature is None: bar.time_signature = copy.deepcopy(piece.time_signature)
+                    if bar.time_signature is None: bar.time_signature = copy.deepcopy(staff.time_signature)
 
                     for voice in bar.voices:
                         for sound in voice.sounds:
@@ -858,12 +928,11 @@ def inherit_attributes():
                             if sound.description is None: sound.description = copy.deepcopy(bar.description)
                             if sound.key is None: sound.key = copy.deepcopy(bar.key)
                             if sound.tempo is None: sound.tempo = copy.deepcopy(bar.tempo)
-                            #if sound.time_signature is None: sound.time_signature = piece.time_signature
     pass
 
 def build_piece():
     inherit_attributes()
-    print("build_piece")
+    logging.debug("build_piece")
     i = 0
     for piece in piece_list:
         for group in piece.groups:
@@ -871,6 +940,7 @@ def build_piece():
                 clef_name = ''
                 dynamics_value = ''
                 tempo_value = ''
+                time_signature_value = ''
                 for bar in staff.bars:
                     if bar.measure.clef != None:
                         clef_name = bar.measure.clef.name
@@ -906,8 +976,16 @@ def build_piece():
                                 if sound.tempo.text != tempo_value:
                                     tempo_value = sound.tempo.text
                                     bar.measure.insert(sound.note.offset, sound.tempo)
-
+                    
                     staff.staff.append(bar.measure)
+                    #insert time_signature if changed
+                    if bar.time_signature != None: 
+                        if bar.time_signature.ratioString != time_signature_value:
+                            time_signature_value = bar.time_signature.ratioString
+                            for x in group.staffs:
+                                x.staff.insert(bar.measure.offset, bar.time_signature)
+                    
+                    
                     #check voices duration
                     durations = set([voice.voice.duration.quarterLength for voice in bar.voices])
                     if len(durations) != 1:
@@ -924,7 +1002,7 @@ def build_piece():
 def showNotes(output_path):
    
     build_piece()
-    print("showNotes")
+    logging.debug("showNotes")
 
     if output_path == "":
         for piece in piece_list:
