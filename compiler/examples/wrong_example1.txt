@@ -1,0 +1,16 @@
+create piece:
+    author = "Daniel i Marcin"
+    title = "Wlazl kotek na plotek"
+    time_signature(4/4)
+    create group:
+        create staff:asdasdasd
+            create bar:
+                [{G4,'1/4',dynamics(f),articulation(accent)},{E4,'1/4'},{E4,'1/4'},{F4,'1/4'}] apply [lyrics="la"] for [1,2,3,4]
+            create bar:
+                [{D4,'1/4'},{D4,'1/4'},{C4,'1/8'},{E4,'1/8'},{G4,'1/4'}] apply [lyrics="pam"] for [1,2,3,4,5]
+        create staff:
+            clef(bass)
+            create bar:
+                [{G3,'1/4'},{E3,'1/4'},{E3,'1/4'},{F3,'1/4'}]  apply [lyrics="pam"] for [1,2,3,4]
+            create bar:
+                [{D3,'1/4'},{D3,'1/4'},{C3,'1/8'},{E3,'1/8'},{G3,'1/4'}] apply [lyrics="la"] for [1,2,3,4,5]

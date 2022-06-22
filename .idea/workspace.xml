@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="08d524c1-e77b-4922-b8d9-1cd3a8c2c507" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/compiler/build.py" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/build.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compiler/parser.out" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/parser.out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compiler/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compiler/parsetab.py" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/parsetab.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compiler/scanner.py" beforeDir="false" afterPath="$PROJECT_DIR$/compiler/scanner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/structures/sound.py" beforeDir="false" />
-    </list>
+    <list default="true" id="08d524c1-e77b-4922-b8d9-1cd3a8c2c507" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,6 +20,12 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/compiler" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\cmder\lll\Rethen-language\compiler" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -37,7 +36,11 @@
       <option name="presentableId" value="Default" />
       <updated>1654695314413</updated>
       <workItem from="1654695319088" duration="6000" />
+      <workItem from="1655916290405" duration="27000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
