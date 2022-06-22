@@ -1,3 +1,4 @@
+from concurrent.futures import thread
 from structures.sound import Sound
 from structures.staff import Staff
 from structures.piece import Piece
@@ -681,16 +682,28 @@ def p_expression_for_rest(p):
     """
     print("expression_for_rest")
     global sound_clef
-    global sound_articulation
-    global sound_lyrics
-    global sound_dynamics
     global sound_duration
     global sound_key
     global sound_description
     global currentSound
 
+    currentSound = Sound()
+    currentSound.note = note.Rest()
 
-    currentSound = note.Rest()
+    if sound_clef != None: currentSound.clef = copy.deepcopy(sound_clef)
+    if sound_key != None: currentSound.key = copy.deepcopy(sound_key)
+    if sound_duration != None: currentSound.sound_duration = copy.deepcopy(sound_duration)
+    if sound_description != None: currentSound.description = copy.deepcopy(sound_description)
+
+    sounds_list.append(copy.deepcopy(currentSound))
+
+
+
+    currentSound = None
+    sound_duration = None
+    sound_description = None
+    sound_clef = None
+    sound_key = None
     pass
 
 def parseKey(str):
@@ -908,8 +921,22 @@ def build_piece():
     pass
 
 
-def showNotes():
+def showNotes(output_path):
+   
     build_piece()
     print("showNotes")
 
-    piece_list[0].score.show()
+    if output_path == "":
+        for piece in piece_list:
+            piece.score.show()
+    else:
+        if output_path[-3:] == "pdf":
+            i = 1
+            for piece in piece_list:
+                piece.score.write('musicxml.pdf', fp=output_path[:-4]+"("+str(i)+")"+".pdf")
+                i += 1
+        elif output_path[-3:] == "mid":
+            i = 1
+            for piece in piece_list:
+                piece.score.write('midi', fp=output_path[:-4]+"("+str(i)+")"+".mid")
+                i += 1
