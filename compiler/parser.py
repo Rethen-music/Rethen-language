@@ -689,7 +689,7 @@ def p_expression_for_sound(p):
 
 def p_expression_for_rest(p):
     """
-    expression_for_rest : REST additionals_for_rest
+    expression_for_rest : REST additionals_for_sound
     """
     logging.debug("expression_for_rest")
     global sound_clef
@@ -874,17 +874,6 @@ def parse_sound_duration(str):
     elif len(numbers) == 1:
         d.quarterLength = numbers[0] * 4
     return d
-
-def p_additionals_for_rest(p):
-    """
-    additionals_for_rest : empty
-    | SEPARATOR SOUND_DURATION_VALUE additionals_for_sound
-    | SEPARATOR CLEF CLEF_VALUE additionals_for_sound
-    | SEPARATOR DESCRIPTION EQUALS STRING additionals_for_sound
-    | SEPARATOR KEY KEY_VALUE additionals_for_sound
-    """
-    logging.debug("additionals_for_rest")
-    pass
 
 def p_empty(p):
     'empty :'
