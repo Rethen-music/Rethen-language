@@ -447,75 +447,148 @@ Examples
 ## GRAMMAR:
 
 <pre>
-%%
+    start : create_piece tabs
 
-start: CREATE PIECE COLON_SIGN after_create_piece;
+    zero_tabs : create_piece
 
-after_create_piece:
-    | TAB AUTHOR EQUALS STRING after_create_piece
-    | TAB TITLE EQUALS STRING after_create_piece
-    | TAB KEY KEY_VALUE after_create_piece
-    | TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_piece
-    | TAB CREATE GROUP COLON_SIGN after_create_group
-    | TAB CREATE GROUP REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET COLON_SIGN after_create_group
+    one_tab : piece_attribute
+        | create_group
 
-after_create_group:
-    | TAB TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_group
-    | TAB TAB KEY EQUALS KEY_VALUE after_create_group
-    | TAB TAB CLEF EQUALS CLEF_VALUE after_create_group
-    | TAB TAB CREATE LINE COLON_SIGN after_create_line
-    | TAB TAB CREATE LINE REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET COLON_SIGN after_create_line
+    two_tabs : group_attribute
+        | create_staff
 
-after_create_line:
-    | TAB TAB TAB CLEF EQUALS CLEF_VALUE after_create_line
-    | TAB TAB TAB TIME_SIGNATURE EQUALS TIME_SIGNATURE_VALUE after_create_line
-    | TAB TAB TAB CREATE BAR REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET COLON_SIGN after_create_bar
-    | TAB TAB TAB CREATE BAR COLON_SIGN after_create_bar
+    three_tabs : staff_attribute
+        | create_bar
 
-after_create_bar: sounds_list
-    | TAB TAB TAB TAB sounds_list after_create_bar
+    four_tabs : bar_attribute
 
+     tabs : empty 
+        | zero_tabs tabs
+        | TAB one_tab tabs
+        | TAB TAB two_tabs tabs
+        | TAB TAB TAB three_tabs tabs
+        | TAB TAB TAB TAB four_tabs tabs
 
-sounds_list: LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET
-    | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET
-    | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET REPEAT LEFT_ROUND_BRACKET NUMBER RIGHT_ROUND_BRACKET AND APPLY attributes loop
+    create_piece : CREATE PIECE COLON_SIGN
+        | CREATE PIECE REPEAT ITERATION_NUMBER COLON_SIGN
 
-sounds: sound
-    | rest
-    | sound SEPARATOR sounds
-    | rest SEPARATOR sounds
+    piece_attribute : AUTHOR EQUALS STRING
+        | TITLE EQUALS STRING
+        | CLEF CLEF_VALUE
+        | TEMPO EQUALS STRING
+        | TIME_SIGNATURE TIME_SIGNATURE_VALUE
+        | KEY KEY_VALUE
+        | SOUND_DURATION EQUALS SOUND_DURATION_VALUE
+        | ARTICULATION ARTICULATION_VALUE
+        | DYNAMICS DYNAMICS_VALUE
+        | LYRICS EQUALS STRING
+        | DESCRIPTION EQUALS STRING
 
-rest: LEFT_ROUND_BRACKET expression_for_rest RIGHT_ROUND_BRACKET
+    create_group : CREATE GROUP COLON_SIGN
+        | CREATE GROUP REPEAT ITERATION_NUMBER COLON_SIGN
 
-sound: LEFT_ROUND_BRACKET expression_for_sound RIGHT_ROUND_BRACKET
+    group_attribute : CLEF CLEF_VALUE
+        | TEMPO EQUALS STRING
+        | TIME_SIGNATURE TIME_SIGNATURE_VALUE
+        | KEY KEY_VALUE
+        | SOUND_DURATION EQUALS SOUND_DURATION_VALUE
+        | ARTICULATION ARTICULATION_VALUE
+        | DYNAMICS DYNAMICS_VALUE
+        | LYRICS EQUALS STRING
+        | DESCRIPTION EQUALS STRING
 
-expression_for_sound: SOUND_NAME additionals_for_sound
+    create_staff : CREATE STAFF COLON_SIGN
+        | CREATE STAFF REPEAT ITERATION_NUMBER COLON_SIGN
 
-expression_for_rest: REST additionals_for_rest
-
-additionals_for_sound: 
-    | SOUND_DURATION additionals_for_sound
-    | CLEF EQUALS CLEF_VALUES additionals_for_sound
-    | ARTICULATION EQUALS ARTICULATION_VALUES additionals_for_sound
-    | DYNAMICS EQUALS DYNAMICS_VALUE additionals_for_sound
-    | LYRICS EQUALS QUOTES STRING QUOTES additionals_for_sound
-    | DESCRIPTION EQUALS QUOTES STRING QUOTES additionals_for_sound
-    | KEY EQUALS KEY_VALUE additionals_for_sound
-
-additionals_for_rest:
-    | SOUND_DURATION additionals_for_sound
-    | CLEF EQUALS CLEF_VALUES additionals_for_sound
-    | DESCRIPTION EQUALS QUOTES STRING QUOTES additionals_for_sound
-    | KEY EQUALS KEY_VALUE additionals_for_sound
-
-
-attributes:
-
+    staff_attribute : CLEF CLEF_VALUE
+        | TEMPO EQUALS STRING
+        | TIME_SIGNATURE TIME_SIGNATURE_VALUE
+        | KEY KEY_VALUE
+        | SOUND_DURATION EQUALS SOUND_DURATION_VALUE
+        | ARTICULATION ARTICULATION_VALUE
+        | DYNAMICS DYNAMICS_VALUE
+        | LYRICS EQUALS STRING
+        | DESCRIPTION EQUALS STRING
 
 
+    create_bar : CREATE BAR COLON_SIGN
+        | CREATE BAR REPEAT ITERATION_NUMBER COLON_SIGN
 
-loop:
+    bar_attribute : sounds_list
+        | CLEF CLEF_VALUE
+        | TEMPO EQUALS STRING
+        | TIME_SIGNATURE TIME_SIGNATURE_VALUE
+        | KEY KEY_VALUE
+        | SOUND_DURATION EQUALS SOUND_DURATION_VALUE
+        | ARTICULATION ARTICULATION_VALUE
+        | DYNAMICS DYNAMICS_VALUE
+        | LYRICS EQUALS STRING
+        | DESCRIPTION EQUALS STRING
 
+    expression_list : expression
+        | expression SEPARATOR expression_list
 
-%%
+    expression : INDEX EQUALS NUMBER
+        | INDEX GREATER_EQUALS NUMBER
+        | INDEX LOWER_EQUALS NUMBER
+        | INDEX LOWER NUMBER
+        | INDEX GREATER NUMBER
+        | NUMBER
+        | NUMBER LOWER INDEX LOWER NUMBER
+        | NUMBER LOWER INDEX LOWER_EQUALS NUMBER
+        | NUMBER LOWER_EQUALS INDEX LOWER NUMBER
+        | NUMBER LOWER_EQUALS INDEX LOWER_EQUALS NUMBER
+        | NUMBER GREATER INDEX GREATER NUMBER
+        | NUMBER GREATER INDEX GREATER_EQUALS NUMBER
+        | NUMBER GREATER_EQUALS INDEX GREATER NUMBER
+        | NUMBER GREATER_EQUALS INDEX GREATER_EQUALS NUMBER
+
+    repeat : REPEAT ITERATION_NUMBER
+
+    apply : APPLY LEFT_SQUARE_BRACKET additionals_in_list RIGHT_SQUARE_BRACKET FOR LEFT_SQUARE_BRACKET expression_list RIGHT_SQUARE_BRACKET
+
+    sounds_list : LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET
+        | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET repeat
+        | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET apply
+        | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET repeat AND apply
+        | LEFT_SQUARE_BRACKET sounds RIGHT_SQUARE_BRACKET apply AND repeat
+
+    sounds : sound
+            | rest
+            | sound SEPARATOR sounds
+            | rest SEPARATOR sounds
+
+    sound :   LEFT_CURLY_BRACKET expression_for_sound  RIGHT_CURLY_BRACKET
+
+    rest : LEFT_CURLY_BRACKET expression_for_rest RIGHT_CURLY_BRACKET
+
+    expression_for_sound : SOUND_NAME additionals_for_sound
+
+    expression_for_rest : REST additionals_for_sound
+
+    additionals_for_sound : empty
+        | sound_attribute additionals_for_sound
+
+    additionals_in_list : empty
+        | sound_attribute_in_list additionals_in_list
+        | sound_attribute_in_list SEPARATOR additionals_in_list
+
+    sound_attribute_in_list : SOUND_DURATION_VALUE
+        | CLEF CLEF_VALUE
+        | ARTICULATION ARTICULATION_VALUE
+        | DYNAMICS DYNAMICS_VALUE
+        | LYRICS EQUALS STRING
+        | DESCRIPTION EQUALS STRING
+        | KEY KEY_VALUE
+        | TEMPO EQUALS STRING
+
+    sound_attribute : SEPARATOR SOUND_DURATION_VALUE
+        | SEPARATOR CLEF CLEF_VALUE
+        | SEPARATOR ARTICULATION ARTICULATION_VALUE
+        | SEPARATOR DYNAMICS DYNAMICS_VALUE
+        | SEPARATOR LYRICS EQUALS STRING
+        | SEPARATOR DESCRIPTION EQUALS STRING
+        | SEPARATOR KEY KEY_VALUE
+        | SEPARATOR TEMPO EQUALS STRING
+
 </pre>
